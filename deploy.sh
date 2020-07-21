@@ -114,6 +114,18 @@ if [ "$1" ]; then
         checkForDevice "Bluestacks"
         deploy "Bluestacks" "$bluestacksDirectory"
 
+    # BlueStacks auto
+    elif [ "$1" == "bsauto" ]; then
+        open = $(pgrep Bluestacks)
+        if [[ $? != 0 ]]; then
+          open /Applications/Bluestacks.app
+          sleep 25
+        fi
+        restartAdb
+        checkForDevice "Bluestacks"
+        deploy "Bluestacks" "$bluestacksDirectory"
+        killall BlueStacks
+
     # Nox
     elif [ "$1" == "nox" ] || [ "$1" == "n" ] || [ "$1" == "-nox" ] || [ "$1" == "-n" ]; then
         restartAdb
