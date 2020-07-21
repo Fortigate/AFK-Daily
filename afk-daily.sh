@@ -257,25 +257,35 @@ function fastRewards() {
 
 # Collects and sends companion points, as well as auto lending mercenaries
 function collectFriendsAndMercenaries() {
+  # TODO: Check if its necessary to send mercenaries
+  getColor 1000 760
+  if [ "$RGB" == "fd1f06" ]; then
+    # Clic friends
     input tap 970 810
     sleep 1
+    # Click send and recieve
     input tap 930 1600
     wait
+    # Click Mercenaries
     input tap 720 1760
     wait
+    # Click manage
     input tap 990 190
     wait
+    # Click apply
     input tap 630 1590
     wait
+    # Click auto-lend
     input tap 750 1410
     sleep 1
+    # Click close button twice to exit
     input tap 70 1810
     input tap 70 1810
-
-    # TODO: Check if its necessary to send mercenaries
-
     wait
     verifyRGB 450 1775 cc9261 "Sent and recieved companion points, as well as auto lending mercenaries."
+  else
+    echo "No Friends notificaion badge found"
+  fi
 }
 
 # Starts Solo bounties
