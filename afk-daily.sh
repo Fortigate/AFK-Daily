@@ -633,16 +633,23 @@ function collectQuestChests() {
 
 # Collects mail
 collectMail() {
+  getColor 1000 580
+  if [ "$RGB" == "fe2f1e" ]; then
+    # Click mail icon
     input tap 960 630
     wait
+    # Click collect
     input tap 790 1470
     wait
+    # Click outside the menu twice to close?
     input tap 110 1850
     wait
     input tap 110 1850
-
     wait
     verifyRGB 20 1775 d49a61 "Successfully collected Mail."
+  else
+    echo "No mail notification found"
+  fi
 }
 
 # Says Hi to Soren
