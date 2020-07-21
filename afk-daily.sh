@@ -151,51 +151,108 @@ function quickBattleGuildBosses() {
 
 # Loots afk chest
 function lootAfkChest() {
+    # Click chest
     input tap 550 1500
     sleep 1
-    input tap 550 1350
+    # Click claim
+    input tap 700 1350
     sleep 1
+    # Close Window
     input tap 550 1850
     sleep 1
-
+    # VerifyRGB with the top left of the campaign button
     wait
     verifyRGB 450 1775 cc9261 "AFK Chest looted."
 }
 
 # Challenges a boss in the campaign
 function challengeBoss() {
+    # Press Begin
     input tap 550 1650
     sleep 1
 
-    # Check if boss
+    # Check for 'boss' text in enemy formation
     getColor 550 740
     if [ "$RGB" = "f1d79f" ]; then
         input tap 550 1450
     fi
 
     sleep 2
+    # Press begin battle
     input tap 550 1850
     sleep 1
+
+    # Press Pause
     input tap 80 1460
     wait
+    # Press Exit battle
     input tap 230 960
-
+    # VerifyRGB with the top left of the campaign button
     wait
     verifyRGB 450 1775 cc9261 "Challenged boss in campaign."
 }
 
-# Collects fast rewards
+# Challenges a boss in the campaign
+function challengeBossRetry() {
+    # Press Begin
+    input tap 550 1650
+    sleep 1
+
+    # Check for 'boss' text in enemy formation
+    getColor 550 740
+    if [ "$RGB" = "f1d79f" ]; then
+        input tap 550 1450
+    fi
+
+    sleep 2
+    # Press begin battle
+    input tap 550 1850
+    sleep 1
+
+    while [ $victory = "false" ]; do
+      getColor 160 1150
+      # While defeat text not found
+      while [ ! "$RGB" = "8191aa" ]; do
+          getColor 160 1150
+          sleep 1
+      done
+
+      # If defeat text found click retry
+      if [ "$RGB" = "8191aa" ]; then
+        input tap 550 1700
+        sleep 1
+        # Press begin battle
+        input tap 550 1850
+        sleep 1
+      fi
+    done
+}
+
+# Collects fast rewards (Only at campaign page, no error checking)
 function fastRewards() {
+  getColor 980 1620
+  if [ "$RGB" == "ed1f06" ]; then
+    # Press fast rewards
     input tap 950 1660
     wait
-    input tap 710 1260
-    sleep 1
+    # Check to make sure the gem icon isn't in the 'use' button, so we only claim the free usage
+    getColor 624 1253
+    if [ ! "$RGB" = "f8f8ff" ]; then
+      # Click claim
+      input tap 710 1260
+      sleep 1
+    fi
+    # Click around campaign button
     input tap 560 1800
     wait
+    # Click close
     input tap 400 1250
-
+    # VerifyRGB with the top left of the campaign button
     wait
     verifyRGB 450 1775 cc9261 "Fast Rewards collected."
+  else
+    echo "No fast rewards notication badge found"
+  fi
 }
 
 # Collects and sends companion points, as well as auto lending mercenaries
