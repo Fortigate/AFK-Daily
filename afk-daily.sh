@@ -3,7 +3,6 @@
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
 canOpenSoren=false
-totalAmountGuildBossTries=2+0
 totalAmountDailyQuests=8
 endAtSoren=true
 # TODO: End at legends torunament to bet
@@ -527,71 +526,71 @@ function kingsTower() {
     verifyRGB 240 1775 d49a61 "Successfully battled at the Kings Tower."
 }
 
-# Battles against Guild boss Wrizz
+# Battles against Guild bosses
 function guildHunts() {
+    #Press Guild Hall
     input tap 380 360
     sleep 3
+    #Press Guild Hunting
     input tap 290 860
     sleep 1
+    #Press Challenge
+    input tap 540 1800
+    sleep 2
 
-    # TODO: Make sure 2x and Auto are enabled
-    # TODO: Have a variable decide if fight wrizz or not
-    # Start checking for a finished Battle after 40 seconds
-    # waitForBattleToFinish 85
-    #wait
-    #input tap 550 800
-    #input tap 550 800
-    #wait
-
-    # Wrizz
-    # TODO: Check if possible to fight wrizz
-    # Repeat a battle for as long as totalAmountArenaTries
-    local COUNT=0
-    until [ "$COUNT" -ge "$totalAmountGuildBossTries" ]; do
-        # Check if its possible to fight wrizz
-        # getColor 710 1840
-        # if [ "$RGB" != "9de7bd" ]; then
-        #     echo "Enough of wrizz! Going out."
-        #     break
-        # fi
-
-        input tap 710 1840
-        wait
-        input tap 720 1300
-        sleep 1
-        input tap 550 800
-        input tap 550 800
-        sleep 1
-        ((COUNT = COUNT + 1)) # Increment
-    done
+    #Now we check for the VS text at the top of the screen to see if Wrizz is active
+    getColor 600 80
+    if [ "$RGB" == "eedd9e" ]; then
+      while [ "$RGB" == "eedd9e" ]; do
+        # Clic Begin Battles
+        input tap 550 1850
+        sleep 100
+        # Click collect
+        input tap 540 1800
+        sleep 2
+        #Press Challenge
+        input tap 540 1800
+        sleep 2
+        #Check for VS text again
+        getColor 600 80
+      done
+    fi
 
     # Soren
+
+    #Click the right -> arrow
     input tap 970 890
     sleep 1
 
-    getColor 550 1850
+    #Press Challenge
+    input tap 540 1800
+    sleep 2
 
-    # If Soren is open
-    if [ "$RGB" == "412818" ]; then
-        quickBattleGuildBosses
-
-    # If Soren is closed
-    else
-        getColor 580 1753
-
-        # If soren is "openable" and canOpenSoren == true
-        if [ "$RGB" == "fae0ac" ] && [ "$canOpenSoren" == true ]; then
-            input tap 550 1850
-            wait
-            input tap 700 1250
-            sleep 1
-            quickBattleGuildBosses
-        fi
+    #Now we check for the VS text at the top of the screen to see if Wrizz is active
+    getColor 600 80
+    if [ "$RGB" == "eedd9e" ]; then
+      while [ "$RGB" == "eedd9e" ]; do
+        # Clic Begin Battles
+        input tap 550 1850
+        sleep 100
+        # Click collect
+        input tap 540 1800
+        sleep 2
+        #Press Challenge
+        input tap 540 1800
+        sleep 2
+        #Check for VS text again
+        getColor 600 80
+      done
     fi
+
+    #Click back arrow twice
+    input tap 70 1810
+    wait
     input tap 70 1810
 
     sleep 1
-    verifyRGB 70 1000 a9a95f "Successfully battled Wrizz."
+    verifyRGB 450 1775 58371f "Successfully battled Guild Hunts."
 }
 
 # Battles against the Twisted Realm Boss
