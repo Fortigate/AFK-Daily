@@ -748,42 +748,45 @@ done
 sleep 1
 
 input tap 970 380 # Open menu for friends, etc
+wait
 
-switchTab "Campaign"
-sleep 3
-switchTab "Dark Forest"
-sleep 1
-switchTab "Ranhorn"
-sleep 1
+# challengeBossRetry
 
+# echo "Caching zones"
+# switchTab "Campaign"
+# sleep 1
+# switchTab "Dark Forest"
+# sleep 1
+# switchTab "Ranhorn"
+# sleep 1
+
+echo "Starting activities"
 # CAMPAIGN TAB
 switchTab "Campaign"
-lootAfkChest
-challengeBoss
-fastRewards
-collectFriendsAndMercenaries
-lootAfkChest
-
-# DARK FOREST TAB
+lootAfkChest #Done
+fastRewards #Done
+collectMail #Done
+collectFriendsAndMercenaries #Done
+challengeBoss #Done
+#
+# # DARK FOREST TAB
 switchTab "Dark Forest"
-soloBounties
-teamBounties
-arenaOfHeroes
-legendsTournament
-kingsTower
+# # soloBounties #Auto-fill required
+# # teamBounties #Auto-fill required
+arenaOfHeroes #Edit for quick battle when unlocked
+legendsTournament #Done
+kingsTower #Changed for faction towers not unlocked
 
 # RANHORN TAB
 switchTab "Ranhorn"
-guildHunts
-twistedRealmBoss
-storeBuyDust # TODO: Buy elite soulstone as well
-collectQuestChests
-collectMail
+guildHunts #Done
+# twistedRealmBoss #12-40 required
+storeBuyDust # TODO: Verification / Buy elite soulstone as well
 
-# EXTRA
-if [ "$endAtSoren" == true ]; then
-    visitSoren
-fi
+# CAMPAIGN TAB
+switchTab "Campaign"
+lootAfkChest #Done
+collectQuestChests #Done
 
 echo
 echo "End of script!"
