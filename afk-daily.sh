@@ -3,7 +3,6 @@
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
 canOpenSoren=false
-totalAmountArenaTries=2+0
 totalAmountGuildBossTries=2+0
 totalAmountDailyQuests=8
 endAtSoren=true
@@ -375,82 +374,130 @@ function teamBounties() {
 
 # Does the daily arena of heroes battles
 function arenaOfHeroes() {
+    #Click "Arena of Heroes"
     input tap 740 1050
     sleep 1
     if [ "$pvpEvent" == false ]; then
+        #Click first card in list
         input tap 550 450
     else
+        # Click second card in list
         input tap 550 900
     fi
     sleep 1
+    #Click Record and close to clear the notification
     input tap 1000 1800
+    sleep 1
     input tap 980 410
-    wait
+    sleep 1
+    #Click Challenge
     input tap 540 1800
     sleep 1
 
-    # Repeat a battle for as long as totalAmountArenaTries
-    local COUNT=0
-    until [ "$COUNT" -ge "$totalAmountArenaTries" ]; do
+    getColor 813 691 #Free pixel + color
+    if [ "$RGB" = "fef7ec" ]; then
+      sleep 1
+      while [ "$RGB" = "fef7ec" ]; do
+        echo "Free arena battle found"
+        #Select lowest slot
         input tap 820 1400
         sleep 1
+        #Click 'Begin Battle'
         input tap 550 1850
-        sleep 2
-        input tap 880 1470
-        wait
+        #Wait 90 seconds as I can't skip
+        sleep 90
+        #Tap to clear loot
         input tap 550 1550
         wait
+        #Tap to close Victory/Defeat screen
         input tap 550 1550
         sleep 1
-        ((COUNT = COUNT + 1)) # Increment
-    done
+        #we need to be back at the challenge menu again before we check 'free' pixel
+        getColor 813 691
+      done
+    else
+      echo "No free arena battles found"
+    fi
 
+    #Close opponent list window
     input tap 1000 380
     wait
+    #Tap back
+    input tap 70 1810
+    wait
+    #Tap back
     input tap 70 1810
 
     sleep 1
-    verifyRGB 850 130 3c2814 "Successfully battled at the Arena of Heroes."
+    verifyRGB 240 1775 d49a61 "Successfully battled at the Arena of Heroes."
 }
 
 # Does the daily Legends tournament battles
 function legendsTournament() {
-    ## For testing only! Keep as comment ##
-    # input tap 740 1050
-    # sleep 1
-    ## End of testing ##
+    #Press Arena of Heroes
+    input tap 740 1050
+    sleep 1
     if [ "$pvpEvent" == false ]; then
+        #Second slot
         input tap 550 900
     else
+        #Third Slot
         input tap 550 1450
     fi
     sleep 1
+    #Collect Gladiator Coins
     input tap 550 280
     sleep 2
+    #Clear Gladiator coins loot overlay
     input tap 550 1550
     sleep 1
+    #Open and close 'Record'
     input tap 1000 1800
     input tap 990 380
     wait
 
     # Repeat a battle for as long as totalAmountArenaTries
-    local COUNT=0
-    until [ "$COUNT" -ge "$totalAmountArenaTries-2" ]; do
-        input tap 550 1840
-        sleep 1
-        input tap 800 1140
-        sleep 1
-        input tap 670 1110
-        sleep 1
-        input tap 550 1850
-        sleep 2
-        input tap 880 1470
-        sleep 1
-        input tap 550 800
-        sleep 1
-        ((COUNT = COUNT + 1)) # Increment
-    done
+    #TODO Replace with 'Free' text detection
 
+    #Press Challenge
+    input tap 550 1840
+    sleep 1
+
+    getColor 790 728 #Free pixel + color
+    if [ "$RGB" = "ffffff" ]; then
+      sleep 1
+      while [ "$RGB" = "ffffff" ]; do
+        echo "Free legends battle found"
+        #Select lowest slot
+        input tap 800 1150
+        sleep 1
+        #Click 'Next Team twice'
+        input tap 550 1850
+        wait
+        input tap 550 1850
+        sleep 1
+        #Click Begin Battle
+        input tap 550 1850
+        #Make sure we're loaded then skip
+        sleep 2
+        input tap 870 1450
+        sleep 2
+        #Tap to close Victory/Defeat screen
+        input tap 550 1850
+        sleep 1
+        #Press Challenge
+        input tap 550 1840
+        sleep 2
+        #we need to be back at the challenge menu again before we check 'free' pixel
+        getColor 790 728
+      done
+    else
+      echo "No free legends battles found"
+    fi
+
+    #Click back arrow three times
+    input tap 70 1810
+    wait
     input tap 70 1810
     wait
     input tap 70 1810
