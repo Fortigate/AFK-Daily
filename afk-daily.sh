@@ -629,14 +629,25 @@ function twistedRealmBoss() {
 
 # Buys daily dust from ths store
 function storeBuyDust() {
+    #Click on the shop
     input tap 330 1650
     sleep 1
-    input tap 170 840
-    wait
-    input tap 550 1420
-    sleep 1
-    input tap 550 1220
-    wait
+    #Click on dust top left
+    #TODO Add verification
+    getColor 175 840
+    echo $RGB
+    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ]; then
+      input tap 170 840
+      wait
+      #Click Purchase (Two clicks it can be in two locations)
+      input tap 550 1420
+      input tap 550 1550
+      sleep 1
+      #Close loot window
+      input tap 550 1220
+      wait
+    fi
+    #Back arrow to exit shop
     input tap 70 1810
 
     wait
