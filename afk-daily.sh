@@ -150,6 +150,7 @@ function quickBattleGuildBosses() {
 # Loots afk chest
 function lootAfkChest() {
     # Click chest
+    sleep 1
     input tap 550 1500
     sleep 1
     # Click claim
@@ -282,7 +283,7 @@ function collectFriendsAndMercenaries() {
     wait
     verifyRGB 450 1775 cc9261 "Sent and recieved companion points, as well as auto lending mercenaries."
   else
-    echo "No Friends notificaion badge found"
+    echo "No Friends notification badge found"
   fi
 }
 
