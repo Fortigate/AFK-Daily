@@ -5,6 +5,7 @@
 canOpenSoren=false
 totalAmountDailyQuests=8
 endAtSoren=true
+victory=false
 # TODO: End at legends torunament to bet
 # TODO: Let player choose VIP and script knows how often
 
@@ -520,8 +521,9 @@ function kingsTower() {
     input tap 230 960
     wait
     input tap 70 1810
-    wait
-    input tap 70 1810
+    #Below is if you have faction towers unlocked
+    # wait
+    # input tap 70 1810
 
     wait
     verifyRGB 240 1775 d49a61 "Successfully battled at the Kings Tower."
@@ -656,12 +658,16 @@ function storeBuyDust() {
 
 # Collects
 function collectQuestChests() {
+  getColor 1000 200
+  # if [ "$RGB" == "f53a29" ]; then
+    # Click quests
     input tap 960 250
-    wait
+    sleep 1
 
-    # Collect Quests
+    # Collect Quests loop
     getColor 700 670
-    while [ "$RGB" == "7dfff2" ]; do
+    while [ "$RGB" == "7cfff3" ]; do
+      # If blue 'completed' bar found, click collect
         input tap 930 680
         wait
         getColor 700 670
@@ -684,9 +690,9 @@ function collectQuestChests() {
     input tap 580 600
     wait
     input tap 70 1650
-
     sleep 1
-    verifyRGB 20 1775 d49a61 "Successfully collected daily Quest chests."
+
+    verifyRGB 20 1775 54331a "Successfully collected daily Quest chests."
 }
 
 # Collects mail
