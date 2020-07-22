@@ -99,6 +99,112 @@ function verifyRGB() {
     fi
 }
 
+# Switches to another character. Params: character slot
+function switchCharacter() {
+    case "$1" in
+    "1")
+        #Press Profile
+        input tap 120 100
+        sleep 1
+        #Press Settings
+        input tap 650 1675
+        sleep 1
+        #Press Server
+        input tap 300 500
+        sleep 1
+        #Press Slot 1
+        input tap 550 550
+        sleep 1
+        getColor 400 750
+        #If we detect the change server notice
+        if [ "$RGB" = "866442" ]; then
+          echo "Changing to Slot 1"
+          #Click confirm
+          input tap 700 1250
+          sleep 20
+        else
+          echo "No server change necessary"
+          #Tap back
+          input tap 70 1810
+          wait
+          #Tap back
+          input tap 70 1810
+          sleep 1
+        fi
+        #If above = popup we need to change, else we go back to the main menu
+        verifyRGB 450 1775 cc9261 "Server checked."
+        ;;
+    "2")
+        #Press Profile
+        input tap 120 100
+        sleep 1
+        #Press Settings
+        input tap 650 1675
+        sleep 1
+        #Press Server
+        input tap 300 500
+        sleep 1
+        #Press Slot 3
+        input tap 550 750
+        sleep 1
+        getColor 400 750
+        #If we detect the change server notice
+        if [ "$RGB" = "866442" ]; then
+          echo "Changing to Slot 2"
+          #Click confirm
+          input tap 700 1250
+          sleep 20
+        else
+          echo "No server change necessary"
+          #Tap back
+          input tap 70 1810
+          wait
+          #Tap back
+          input tap 70 1810
+          sleep 1
+        fi
+        #If above = popup we need to change, else we go back to the main menu
+        verifyRGB 450 1775 cc9261 "Server checked."
+        ;;
+    "3")
+        #Press Profile
+        input tap 120 100
+        sleep 1
+        #Press Settings
+        input tap 650 1675
+        sleep 1
+        #Press Server
+        input tap 300 500
+        sleep 1
+        #Press Slot 3
+        input tap 550 950
+        sleep 1
+        getColor 400 750
+        #If we detect the change server notice
+        if [ "$RGB" = "866442" ]; then
+          echo "Changing to Slot 3"
+          #Click confirm
+          input tap 700 1250
+          sleep 20
+        else
+          echo "No server change necessary"
+          #Tap back
+          input tap 70 1810
+          wait
+          #Tap back
+          input tap 70 1810
+          sleep 1
+        fi
+        #If above = popup we need to change, else we go back to the main menu
+        verifyRGB 450 1775 cc9261 "Server checked."
+        ;;
+    *)
+        echo "Server check failed."
+        exit
+        ;;
+    esac
+}
+
 # Switches to another tab. Params: Tab name
 function switchTab() {
     case "$1" in
