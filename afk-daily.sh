@@ -897,32 +897,27 @@ while [ "$RGB" != "cc9261" ]; do
 done
 sleep 1
 
-input tap 970 380 # Open menu for friends, etc
-wait
-
 # challengeBossRetry
 
-# echo "Caching zones"
-# switchTab "Campaign"
-# sleep 1
-# switchTab "Dark Forest"
-# sleep 1
-# switchTab "Ranhorn"
-# sleep 1
+echo "Game loaded, starting activities"
+echo
 
-echo "Starting activities"
+# Load first character
+
 # CAMPAIGN TAB
 switchTab "Campaign"
+switchCharacter "1"
+openMenu
 lootAfkChest #Done
 fastRewards #Done
 collectMail #Done
 collectFriendsAndMercenaries #Done
 challengeBoss #Done
-#
-# # DARK FOREST TAB
+
+# DARK FOREST TAB
 switchTab "Dark Forest"
-# # soloBounties #Auto-fill required
-# # teamBounties #Auto-fill required
+# soloBounties #Auto-fill required
+# teamBounties #Auto-fill required
 arenaOfHeroes #Edit for quick battle when unlocked
 legendsTournament #Done
 kingsTower #Changed for faction towers not unlocked
@@ -931,7 +926,38 @@ kingsTower #Changed for faction towers not unlocked
 switchTab "Ranhorn"
 guildHunts #Done
 # twistedRealmBoss #12-40 required
-storeBuyDust # TODO: Verification / Buy elite soulstone as well
+storeBuyDust # TODO Buy elite soulstone as well
+
+# CAMPAIGN TAB
+switchTab "Campaign"
+lootAfkChest #Done
+collectQuestChests #Done
+
+# Load second character
+
+# CAMPAIGN TAB
+switchTab "Campaign"
+switchCharacter "2"
+openMenu
+lootAfkChest #Done
+fastRewards #Done
+collectMail #Done
+collectFriendsAndMercenaries #Done
+challengeBoss #Done
+
+# DARK FOREST TAB
+switchTab "Dark Forest"
+# soloBounties #Auto-fill required
+# teamBounties #Auto-fill required
+arenaOfHeroes #Edit for quick battle when unlocked
+legendsTournament #Done
+kingsTower #Changed for faction towers not unlocked
+
+# RANHORN TAB
+switchTab "Ranhorn"
+guildHunts #Done
+# twistedRealmBoss #12-40 required
+storeBuyDust # TODO Buy elite soulstone as well
 
 # CAMPAIGN TAB
 switchTab "Campaign"
