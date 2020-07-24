@@ -99,6 +99,12 @@ function verifyRGB() {
     fi
 }
 
+function openMenu() {
+  # Open menu for friends, etc
+  input tap 970 380
+  wait
+}
+
 # Switches to another character. Params: character slot
 function switchCharacter() {
     case "$1" in
