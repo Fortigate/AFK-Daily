@@ -62,8 +62,9 @@ function checkForDevice() {
         elif [ "$1" == "Bluestacks" ]; then
             printf "Searching for Bluestacks through ADB... "
             if ! adb get-state 1>/dev/null; then
-                printf "Exiting..."
-                exit
+                adb connect localhost:5555 1>/dev/null
+                # printf "Exiting..."
+                # exit
             else
                 printf "Found!\n"
             fi
@@ -119,7 +120,7 @@ if [ "$1" ]; then
         open = $(pgrep Bluestacks)
         if [[ $? != 0 ]]; then
           open /Applications/Bluestacks.app
-          sleep 25
+          sleep 40
         fi
         restartAdb
         checkForDevice "Bluestacks"
