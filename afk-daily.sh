@@ -726,7 +726,7 @@ function guildHunts() {
       input tap 70 1810
 
       sleep 1
-      verifyRGB 450 1775 58371f "Guild Hunts battled successfully."
+      verifyRGB 1050 1800 493018 "Guild Hunts battled successfully."
       echo
       return
     fi
@@ -734,9 +734,9 @@ function guildHunts() {
     #Now we check for the VS text at the top of the screen to see if Soren is active
     getColor 600 80
     # echo "Soren VS: " $RGB
-    if [ "$RGB" == "eedd9e" ]; then
+    if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
       echo "Soren active, battling.."
-      while [ "$RGB" == "eedd9e" ]; do
+      while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
         # Clic Begin Battles
         input tap 550 1850
 
