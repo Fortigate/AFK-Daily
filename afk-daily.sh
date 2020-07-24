@@ -39,7 +39,7 @@ function test() {
 
 # Default wait time for actions
 function wait() {
-    sleep 0.5
+    sleep 1
 }
 
 # Starts the app
