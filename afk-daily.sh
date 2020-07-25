@@ -109,7 +109,16 @@ function openMenu() {
   wait
 }
 
-# Switches to another character. Params: character slot
+function waitUntilGameActive {
+  # Loops until the game has launched
+  getColor 1050 1800
+  while [ "$RGB" != "493018" ]; do
+      sleep 1
+      getColor 1050 1800
+  done
+}
+
+# Switches to another character. Params: character slot (1, 2 or 3)
 function switchCharacter() {
     echo $CYAN"Checking loaded character"$NC
     case "$1" in
@@ -132,7 +141,7 @@ function switchCharacter() {
           echo $ORANGE"  Changing to Slot 1"$NC
           #Click confirm
           input tap 700 1250
-          sleep 30
+          waitUntilGameActive
         else
           #Tap back
           input tap 70 1810
@@ -163,7 +172,7 @@ function switchCharacter() {
           echo $ORANGE"  Changing to Slot 2"$NC
           #Click confirm
           input tap 700 1250
-          sleep 30
+          waitUntilGameActive
         else
           #Tap back
           input tap 70 1810
@@ -194,7 +203,7 @@ function switchCharacter() {
           echo $ORANGE"  Changing to Slot 3"$NC
           #Click confirm
           input tap 700 1250
-          sleep 30
+          waitUntilGameActive
         else
           #Tap back
           input tap 70 1810
@@ -895,13 +904,14 @@ startApp
 sleep 10
 
 # Loops until the game has launched
-while [ "$RGB" != "cc9261" ]; do
-    sleep 1
-    getColor 450 1775
-done
-sleep 1
+# while [ "$RGB" != "cc9261" ]; do
+#     sleep 1
+#     getColor 450 1775
+# done
+# sleep 1
 
-# challengeBossRetry
+#Wait until game is active
+waitUntilGameActive
 
 echo $GREEN"Game loaded! starting activities.."$NC
 echo
