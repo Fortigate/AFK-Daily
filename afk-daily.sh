@@ -420,88 +420,44 @@ function collectFriendsAndMercenaries() {
 }
 
 # Starts Solo bounties
-function soloBounties() {
+function collectBounties() {
+    echo "Attempting Bounties."
+    #Open Bounties
     input tap 600 1320
     sleep 1
 
-    # Check if there are bounties to collect
-    getColor 650 520
-    until [ "$RGB" != "80f6ef" ]; do
-        input tap 915 470
-        sleep 0.5
-        getColor 650 520
-    done
+    #Select Solo bounties
+    input tap 650 1700
+    sleep 1
+    #Select Dispatch
+    input tap 350 1550
+    sleep 1
+    #Select Confirm
+    input tap 550 1540
+    sleep 1
+    #Select Collect All
+    input tap 850 1550
+    sleep 1
 
-    input tap 915 470
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 680
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 890
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 1100
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 1310
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 1520
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input swipe 550 1100 550 800 500
-    wait
-    input tap 915 1350
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    input tap 915 1560
-    wait
-    input tap 350 1160
-    input tap 750 1160
+    #Select Team bounties
+    input tap 950 1700
+    sleep 1
+    #Select Dispatch
+    input tap 350 1550
+    sleep 1
+    #Select Confirm
+    input tap 550 1540
+    sleep 1
+    #Select Collect All
+    input tap 850 1550
+    sleep 1
 
-    wait
-    verifyRGB 650 1820 ac5714 "Successfully finished Solo Bounties."
-}
-
-# Starts Team Bounties
-function teamBounties() {
-    ## For testing only! Keep as comment ##
-    # input tap 600 1320
-    # sleep 1
-    ## End of testing ##
-    input tap 910 1770
-    wait
-
-    # Check if there are bounties to collect
-    getColor 650 520
-    until [ "$RGB" != "80f6ef" ]; do
-        input tap 930 500
-        sleep 0.5
-        getColor 650 520
-    done
-
-    input tap 930 500
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    wait
-    input tap 930 710
-    wait
-    input tap 350 1160
-    input tap 750 1160
-    wait
+    #Tap back
     input tap 70 1810
 
     wait
-    verifyRGB 240 1775 d49a61 "Successfully finished Team Bounties."
+    verifyRGB 1050 1800 493018 "Successfully finished Bounties."
+    echo
 }
 
 # Does the daily arena of heroes battles
@@ -916,8 +872,7 @@ challengeBoss #Done
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
-# soloBounties #Auto-fill required
-# teamBounties #Auto-fill required
+collectBounties #Auto-fill required
 arenaOfHeroes #Edit for quick battle when unlocked
 legendsTournament #Done
 kingsTower #Changed for faction towers not unlocked
@@ -947,8 +902,7 @@ challengeBoss #Done
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
-# soloBounties #Auto-fill required
-# teamBounties #Auto-fill required
+# # collectBounties #Auto-fill required
 arenaOfHeroes #Edit for quick battle when unlocked
 legendsTournament #Done
 kingsTower #Changed for faction towers not unlocked
