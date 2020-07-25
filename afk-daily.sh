@@ -2,11 +2,16 @@
 
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
-canOpenSoren=false
-endAtSoren=true
 victory=false
-# TODO: End at legends torunament to bet
-# TODO: Let player choose VIP and script knows how often
+TIMER=0
+## Text Colours
+GREEN='\033[0;32m'
+LGREEN='\033[1;32m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+ORANGE='\033[0;33m'
+NC='\033[0m' # No Color
 
 # Probably you don't need to modify this. Do it if you know what you're doing, I won't blame you (unless you blame me).
 DEVICEWIDTH=1080
@@ -88,7 +93,7 @@ function getColor() {
 function verifyRGB() {
     getColor "$1" "$2"
     if [ "$RGB" != "$3" ]; then
-        echo "VerifyRGB: Failure! Expected "$3", but got "$RGB" instead."
+        echo $RED"VerifyRGB: Failure! Expected "$3", but got "$RGB" instead."$NC
         echo
         echo "$5"
         # switchApp
@@ -106,7 +111,7 @@ function openMenu() {
 
 # Switches to another character. Params: character slot
 function switchCharacter() {
-    echo "Checking loaded character"
+    echo $CYAN"Checking loaded character"$NC
     case "$1" in
     "1")
         #Press Profile
@@ -124,7 +129,7 @@ function switchCharacter() {
         getColor 400 750
         #If we detect the change server notice
         if [ "$RGB" = "866442" ]; then
-          echo "Changing to Slot 1"
+          echo $ORANGE"  Changing to Slot 1"$NC
           #Click confirm
           input tap 700 1250
           sleep 30
@@ -136,7 +141,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 "Character checked."
+        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
         echo
         ;;
     "2")
@@ -155,7 +160,7 @@ function switchCharacter() {
         getColor 400 750
         #If we detect the change server notice
         if [ "$RGB" = "866442" ]; then
-          echo "Changing to Slot 2"
+          echo $ORANGE"  Changing to Slot 2"$NC
           #Click confirm
           input tap 700 1250
           sleep 30
@@ -167,7 +172,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 "Character checked."
+        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
         echo
         ;;
     "3")
@@ -186,7 +191,7 @@ function switchCharacter() {
         getColor 400 750
         #If we detect the change server notice
         if [ "$RGB" = "866442" ]; then
-          echo "Changing to Slot 3"
+          echo $ORANGE"  Changing to Slot 3"$NC
           #Click confirm
           input tap 700 1250
           sleep 30
@@ -198,7 +203,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 "Character checked."
+        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
         echo
         ;;
     *)
@@ -214,23 +219,23 @@ function switchTab() {
     "Campaign")
         input tap 550 1850
         wait
-        verifyRGB 450 1775 cc9261 "Switched to the Campaign Tab."
+        verifyRGB 450 1775 cc9261 $PURPLE"Switched to the Campaign Tab."$NC
         echo
         ;;
     "Dark Forest")
         input tap 300 1850
         wait
-        verifyRGB 240 1775 d49a61 "Switched to the Dark Forest Tab."
+        verifyRGB 240 1775 d49a61 $PURPLE"Switched to the Dark Forest Tab."$NC
         echo
         ;;
     "Ranhorn")
         input tap 110 1850
         wait
-        verifyRGB 20 1775 d49a61 "Switched to the Rahorn Tab."
+        verifyRGB 20 1775 d49a61 $PURPLE"Switched to the Rahorn Tab."$NC
         echo
         ;;
     *)
-        echo "Failed to switch to another Tab."
+        echo $RED"Failed to switch to another Tab."$NC
         exit
         ;;
     esac
@@ -247,7 +252,7 @@ function waitForBattleToFinish() {
 
 # Loots afk chest
 function lootAfkChest() {
-    echo "Attempting to loot AFK chest."
+    echo $CYAN"Attempting to loot AFK chest."$NC
     # Click chest
     sleep 1
     input tap 550 1500
@@ -260,7 +265,7 @@ function lootAfkChest() {
     sleep 1
     # VerifyRGB with the top left of the campaign button
     wait
-    verifyRGB 1050 1800 493018 "AFK Chest looted successsfully."
+    verifyRGB 1050 1800 493018 $GREEN"AFK Chest looted successsfully."$NC
     echo
 }
 
@@ -268,7 +273,7 @@ function lootAfkChest() {
 function attemptCampaign() {
     case "$1" in
     "1")
-        echo "Loading campaign level for daily quest."
+        echo $CYAN"Loading campaign level for daily quest."$NC
         # Press Begin
         input tap 550 1650
         sleep 1
@@ -292,11 +297,11 @@ function attemptCampaign() {
 
         # VerifyRGB with the top left of the campaign button
         wait
-        verifyRGB 1050 1800 493018 "Campaign level loaded successfully."
+        verifyRGB 1050 1800 493018 $GREEN"Campaign level loaded successfully."$NC
         echo
         ;;
     "2")
-        echo "Attemping campaign flag."
+        echo $CYAN"Attempting campaign flag."$NC
         # Press Begin
         input tap 550 1650
         sleep 1
@@ -328,10 +333,11 @@ function attemptCampaign() {
 
         # VerifyRGB with the top left of the campaign button
         wait
-        verifyRGB 1050 1800 493018 "Campaign flag attempted successfully."
+        verifyRGB 1050 1800 493018 $GREEN"Campaign flag attempted successfully."$NC
         echo
         ;;
     "3")
+        echo $GREEN"Retrying until victorious"$NC
         # Press Begin
         input tap 550 1650
         sleep 1
@@ -366,7 +372,7 @@ function attemptCampaign() {
         done
         ;;
     *)
-        echo "Invalid parameter for attemptCampaign."
+        echo $RED"Invalid parameter for attemptCampaign."$NC
         exit
         ;;
     esac
@@ -374,7 +380,7 @@ function attemptCampaign() {
 
 # Collects fast rewards (Only at campaign page, no error checking)
 function fastRewards() {
-  echo "Attempting daily fast reward collection."
+  echo $CYAN"Attempting daily fast reward collection."$NC
   getColor 980 1620
   if [ "$RGB" == "ed1f06" ]; then
     # Press fast rewards
@@ -394,17 +400,17 @@ function fastRewards() {
     input tap 400 1250
     # VerifyRGB with the top left of the campaign button
     wait
-    verifyRGB 1050 1800 493018 "Fast Rewards collected."
+    verifyRGB 1050 1800 493018 $GREEN"Fast Rewards collected."$NC
     echo
   else
-    echo "No fast rewards notication badge found."
+    echo $ORANGE"No fast rewards notication badge found."$NC
     echo
   fi
 }
 
 # Collects mail
 collectMail() {
-    echo "Attempting to collect mail."
+    echo $CYAN"Attempting to collect mail."$NC
   getColor 1000 580
   if [ "$RGB" == "fe2f1e" ]; then
     # Click mail icon
@@ -419,17 +425,17 @@ collectMail() {
     input tap 110 1850
 
     sleep 2
-    verifyRGB 1050 1800 493018 "Successfully collected Mail."
+    verifyRGB 1050 1800 493018 $GREEN"Successfully collected Mail."$NC
     echo
   else
-    echo "No mail notification found"
+    echo $ORANGE"No mail notification found"$NC
     echo
   fi
 }
 
 # Collects and sends companion points, as well as auto lending mercenaries
 function collectFriendsAndMercenaries() {
-  echo "Attempting companion point collection and mercenary lending."
+  echo $CYAN"Attempting companion point collection and mercenary lending."$NC
   getColor 1000 760
   if [ "$RGB" == "fd1f06" ]; then
     # Clic friends
@@ -457,17 +463,17 @@ function collectFriendsAndMercenaries() {
 
     input tap 70 1810
     wait
-    verifyRGB 1050 1800 493018 "Companion point collection and mercenary lending successfull."
+    verifyRGB 1050 1800 493018 $GREEN"Companion point collection and mercenary lending successfull."$NC
     echo
   else
-    echo "No Friends notification badge found"
+    echo $ORANGE"No Friends notification badge found"$NC
     echo
   fi
 }
 
 # Starts Solo bounties
 function collectBounties() {
-    echo "Attempting Bounties."
+    echo $CYAN"Attempting Bounties."$NC
     #Open Bounties
     input tap 600 1320
     sleep 1
@@ -502,13 +508,13 @@ function collectBounties() {
     input tap 70 1810
 
     wait
-    verifyRGB 1050 1800 493018 "Successfully finished Bounties."
+    verifyRGB 1050 1800 493018 $GREEN"Successfully finished Bounties."$NC
     echo
 }
 
 # Does the daily arena of heroes battles
 function arenaOfHeroes() {
-    echo "Attempting Arena of Heroes battles."
+    echo $CYAN"Attempting Arena of Heroes battles."$NC
     #Click "Arena of Heroes"
     input tap 740 1050
     sleep 1
@@ -533,7 +539,7 @@ function arenaOfHeroes() {
     if [ "$RGB" = "fef7ec" ]; then
       sleep 1
       while [ "$RGB" = "fef7ec" ]; do
-        echo "Free arena battle found"
+        echo $LGREEN"  Free arena battle found"$NC
         #Select lowest slot
         input tap 820 1400
         sleep 1
@@ -551,7 +557,7 @@ function arenaOfHeroes() {
         getColor 813 691
       done
     else
-      echo "No free arena battles found"
+      echo $ORANGE"  No free arena battles found"$NC
     fi
 
     #Close opponent list window
@@ -564,13 +570,13 @@ function arenaOfHeroes() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 "Arena of Heroes successfully checked."
+    verifyRGB 1050 1800 493018 $GREEN"Arena of Heroes successfully checked."$NC
     echo
 }
 
 # Does the daily Legends tournament battles
 function legendsTournament() {
-    echo "Attempting Legends Tournament battles."
+    echo $CYAN"Attempting Legends Tournament battles."$NC
     #Press Arena of Heroes
     input tap 740 1050
     sleep 1
@@ -601,7 +607,7 @@ function legendsTournament() {
     if [ "$RGB" = "ffffff" ]; then
       sleep 1
       while [ "$RGB" = "ffffff" ]; do
-        echo "Free legends battle found"
+        echo $LGREEN"  Free legends battle found"$NC
         #Select lowest slot
         input tap 800 1150
         sleep 1
@@ -626,7 +632,7 @@ function legendsTournament() {
         getColor 790 728
       done
     else
-      echo "No free legends battles found"
+      echo $ORANGE"  No free legends battles found"$NC
     fi
 
     #Click back arrow three times
@@ -637,13 +643,13 @@ function legendsTournament() {
     input tap 70 1810
     sleep 1
 
-    verifyRGB 1050 1800 493018 "Legends Tournament sucessfully checked."
+    verifyRGB 1050 1800 493018 $GREEN"Legends Tournament sucessfully checked."$NC
     echo
 }
 
 # Battles once in the kings tower
 function kingsTower() {
-    echo "Loading King's tower for daily quest."
+    echo $CYAN"Attempting King's tower for daily quest."$NC
     input tap 500 870
     sleep 1
     input tap 550 900
@@ -661,13 +667,13 @@ function kingsTower() {
     # input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 "Kings Tower loaded successfully."
+    verifyRGB 1050 1800 493018 $GREEN"Kings Tower attempted successfully."$NC
     echo
 }
 
 # Battles against Guild bosses
 function guildHunts() {
-    echo "Attempting Guild Hunts."
+    echo $CYAN"Attempting Guild Hunts."$NC
     #Press Guild Hall
     input tap 380 360
     sleep 3
@@ -682,8 +688,8 @@ function guildHunts() {
     getColor 600 80
     # echo "Wrizz VS: " + $RGB
     if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
-      echo "Wrizz active, battling.."
       while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
+        echo $LGREEN"Wrizz active, battling.."$NC
         # Clic Begin Battles
         input tap 550 1850
 
@@ -700,6 +706,8 @@ function guildHunts() {
         #Check for VS text again
         getColor 600 80
       done
+    else
+      echo $ORANGE"  Wrizz not found"$NC
     fi
 
     # Soren
@@ -715,7 +723,7 @@ function guildHunts() {
     #Check for available but not unlocked notice
     getColor 330 725
     if [ "$RGB" == "83613f" ]; then
-      echo "Soren unlock notice found, skipping.."
+      echo $ORANGE"  Soren unlock notice found, skipping.."$NC
       input tap 550 1250
       sleep 1
 
@@ -725,7 +733,7 @@ function guildHunts() {
       input tap 70 1810
 
       sleep 1
-      verifyRGB 1050 1800 493018 "Guild Hunts battled successfully."
+      verifyRGB 1050 1800 493018 $GREEN"Guild Hunts battled successfully."$NC
       echo
       return
     fi
@@ -734,7 +742,7 @@ function guildHunts() {
     getColor 600 80
     # echo "Soren VS: " $RGB
     if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
-      echo "Soren active, battling.."
+      echo $LGREEN"Soren active, battling.."$NC
       while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
         # Clic Begin Battles
         input tap 550 1850
@@ -759,7 +767,7 @@ function guildHunts() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 "Guild Hunts battled successfully."
+    verifyRGB 1050 1800 493018 $GREEN"Guild Hunts battled successfully."$NC
     echo
 }
 
@@ -798,15 +806,15 @@ function twistedRealmBoss() {
 
 # Buys daily dust from ths store
 function storeBuyDust() {
-    echo "Attempting to purchase daily dust from the store."
+    echo $CYAN"Attempting to purchase daily dust from the store."$NC
     #Click on the shop
     input tap 330 1650
     sleep 1
     #Click on dust top left
     #TODO Add verification
     getColor 175 840
-    echo "Dust colour found: " $RGB
-    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ]; then
+    echo "  Dust colour found: " $RGB
+    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ]|| [ "$RGB" == "bb7edd" ; then
       input tap 170 840
       wait
       #Click Purchase (Two clicks it can be in two locations)
@@ -821,13 +829,13 @@ function storeBuyDust() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 "Daily Dust bought from the store successfully."
+    verifyRGB 1050 1800 493018 $GREEN"Daily Dust purchase attempted successfully."$NC
     echo
 }
 
 # Collects
 function collectQuestChests() {
-  echo "Attempting to collect daily quest chests."
+  echo $CYAN"Attempting to collect daily quest chests."$NC
   #TODO Check for daily/weekly/campaign
   getColor 1000 200
   # if [ "$RGB" == "f53a29" ]; then
@@ -842,6 +850,7 @@ function collectQuestChests() {
     getColor 700 670
     while [ "$RGB" == "7cfff3" ]; do
       # If blue 'completed' bar found, click collect
+        echo $LGREEN"Completed quest, collecting.."$NC
         input tap 930 680
         wait
         getColor 700 670
@@ -866,7 +875,7 @@ function collectQuestChests() {
     input tap 70 1650
     sleep 1
 
-    verifyRGB 1050 1800 493018 "Successfully collected daily Quest chests."
+    verifyRGB 1050 1800 493018 $GREEN"Successfully collected daily Quest chests."$NC
     echo
 }
 
@@ -879,7 +888,7 @@ function collectQuestChests() {
 # test 700 670 3 0.5
 
 # --- Script Start --- #
-echo "Script started, waiting for game to load.."
+echo
 closeApp
 sleep 0.5
 startApp
@@ -894,7 +903,7 @@ sleep 1
 
 # challengeBossRetry
 
-echo "Game loaded, starting activities"
+echo $GREEN"Game loaded! starting activities.."$NC
 echo
 
 # Load first character
@@ -957,6 +966,5 @@ switchTab "Campaign"
 lootAfkChest #Done
 collectQuestChests #Done
 
-echo
-echo "End of script!"
+echo $GREEN"End of script!"$NC
 exit
