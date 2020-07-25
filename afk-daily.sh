@@ -252,11 +252,27 @@ function switchTab() {
 
 # Checks for a battle to finish. Params: Seconds
 function waitForBattleToFinish() {
+    # echo "Waiting for battle to finish"
     sleep "$1"
-    while [ "$RGB" != "ca9c5d" ]; do
-        sleep 1
-        getColor 420 380
+    let "TIMER=0"
+    while [ $TIMER -lt 90 ]; do
+      # echo "Checking.. " $TIMER
+      getColor 160 1150
+      # echo "Def " $RGB
+      if [ "$RGB" = "8191aa" ]; then
+        echo $ORANGE"  Defeat!"$NC
+        return
+      fi
+      getColor 420 380
+      # echo "Vic " $RGB
+      if [ "$RGB" = "ca9c5d" ]; then
+        echo $LGREEN"  Victory!"$NC
+        return
+      fi
+      let "TIMER=TIMER+1"
+      sleep 1
     done
+    echo $RED"Battle status timer expired!"$NC
 }
 
 # Loots afk chest
@@ -554,8 +570,8 @@ function arenaOfHeroes() {
         sleep 1
         #Click 'Begin Battle'
         input tap 550 1850
-        #Wait 90 seconds as I can't skip
-        sleep 60
+        #WAit for battle to finish
+        waitForBattleToFinish 10
         #Tap to clear loot
         input tap 550 1550
         wait
@@ -659,17 +675,28 @@ function legendsTournament() {
 # Battles once in the kings tower
 function kingsTower() {
     echo $CYAN"Attempting King's tower for daily quest."$NC
+    #Click King's Tower
     input tap 500 870
     sleep 1
-    input tap 550 900
-    sleep 1
+    #Click non-faction tower
+    # input tap 550 900
+    # sleep 1
+    #Click "Challenge"
     input tap 540 1350
     sleep 1
+    #Click begin battle
     input tap 550 1850
     sleep 1
-    input tap 80 1460
+
+    waitForBattleToFinish 10
+
+    # #Click Pause
+    # input tap 80 1460
+    # wait
+    #Click Exit battle
     input tap 230 960
     wait
+    #Click back arrow
     input tap 70 1810
     #Below is if you have faction towers unlocked
     # wait
@@ -898,6 +925,7 @@ function collectQuestChests() {
 
 # --- Script Start --- #
 echo
+echo $GREEN"Script started, waiting for game to load.."$NC
 closeApp
 sleep 0.5
 startApp
