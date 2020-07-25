@@ -7,6 +7,6 @@
 	
 <br>Updated fork of https://github.com/zebscripts/AFK-Daily. Please visit his project for an extremely comprehensive readme!</br>
 	
-	
+![alt text](https://i.imgur.com/144Dzjk.png)
 	
 This fork requires MacOS (May work with Linux if you can get Bluestacks working), Bluestacks and ADB installed to your $PATH. Once installed the bot can be run or cronned using ```bash deploy.sh bsauto``` to automatically launch Bluestacks, run selected tasks and close Bluestacks once complete.
