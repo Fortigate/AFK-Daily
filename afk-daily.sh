@@ -931,13 +931,6 @@ sleep 0.5
 startApp
 sleep 10
 
-# Loops until the game has launched
-# while [ "$RGB" != "cc9261" ]; do
-#     sleep 1
-#     getColor 450 1775
-# done
-# sleep 1
-
 #Wait until game is active
 waitUntilGameActive
 
@@ -945,64 +938,66 @@ echo $GREEN"Game loaded! starting activities.."$NC
 echo
 
 # Load first character
+switchCharacter "1"
+openMenu
 
 # CAMPAIGN TAB
 switchTab "Campaign"
-switchCharacter "1"
-openMenu
-lootAfkChest #Done
-fastRewards #Done
-collectMail #Done
-collectFriendsAndMercenaries #Done
-attemptCampaign "2" #Done
+lootAfkChest
+fastRewards
+collectMail
+collectFriendsAndMercenaries
+attemptCampaign "2"
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
 collectBounties #Auto-fill required
 arenaOfHeroes #Edit for quick battle when unlocked
-legendsTournament #Done
+legendsTournament
 kingsTower #Changed for faction towers not unlocked
 
 # RANHORN TAB
 switchTab "Ranhorn"
-guildHunts #Done
+guildHunts
 # twistedRealmBoss #12-40 required
 storeBuyDust # TODO Buy elite soulstone as well
 
 # CAMPAIGN TAB
 switchTab "Campaign"
-lootAfkChest #Done
-collectQuestChests #Done
+lootAfkChest
+collectQuestChests
 
-# Load second character
-
-# CAMPAIGN TAB
-switchTab "Campaign"
-switchCharacter "2"
-openMenu
-lootAfkChest #Done
-fastRewards #Done
-collectMail #Done
-collectFriendsAndMercenaries #Done
-attemptCampaign "2" #Done
-
-# DARK FOREST TAB
-switchTab "Dark Forest"
+# # Load second character
+# switchCharacter "2"
+# openMenu
+#
+# # CAMPAIGN TAB
+# switchTab "Campaign"
+# lootAfkChest
+# fastRewards
+# collectMail
+# collectFriendsAndMercenaries
+# attemptCampaign "2"
+#
+# # DARK FOREST TAB
+# switchTab "Dark Forest"
 # # collectBounties #Auto-fill required
-arenaOfHeroes #Edit for quick battle when unlocked
-legendsTournament #Done
-kingsTower #Changed for faction towers not unlocked
-
-# RANHORN TAB
-switchTab "Ranhorn"
-guildHunts #Done
-# twistedRealmBoss #12-40 required
-storeBuyDust # TODO Buy elite soulstone as well
-
-# CAMPAIGN TAB
-switchTab "Campaign"
-lootAfkChest #Done
-collectQuestChests #Done
+# arenaOfHeroes #Edit for quick battle when unlocked
+# # legendsTournament
+# kingsTower #Changed for faction towers not unlocked
+#
+# # RANHORN TAB
+# switchTab "Ranhorn"
+# guildHunts
+# # twistedRealmBoss #12-40 required
+# storeBuyDust # TODO Buy elite soulstone as well
+#
+# # CAMPAIGN TAB
+# switchTab "Campaign"
+# lootAfkChest
+# collectQuestChests
+#
+# switchCharacter "1"
 
 echo $GREEN"End of script!"$NC
 exit
