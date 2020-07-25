@@ -264,69 +264,112 @@ function lootAfkChest() {
     echo
 }
 
-# Challenges a boss in the campaign
-function challengeBoss() {
-    echo "Loading campaign level for daily quest."
-    # Press Begin
-    input tap 550 1650
-    sleep 1
-
-    # Check for 'boss' text in enemy formation
-    getColor 550 740
-    if [ "$RGB" = "f1d79f" ]; then
-        input tap 550 1450
-    fi
-
-    sleep 2
-    # Press begin battle
-    input tap 550 1850
-    sleep 1
-
-    # Press Pause
-    input tap 80 1460
-    wait
-    # Press Exit battle
-    input tap 230 960
-    # VerifyRGB with the top left of the campaign button
-    wait
-    verifyRGB 1050 1800 493018 "Campaign level loaded successfully."
-    echo
-}
-
-# Challenges a boss in the campaign
-function challengeBossRetry() {
-    # Press Begin
-    input tap 550 1650
-    sleep 1
-
-    # Check for 'boss' text in enemy formation
-    getColor 550 740
-    if [ "$RGB" = "f1d79f" ]; then
-        input tap 550 1450
-    fi
-
-    sleep 2
-    # Press begin battle
-    input tap 550 1850
-    sleep 1
-
-    while [ $victory = "false" ]; do
-      getColor 160 1150
-      # While defeat text not found
-      while [ ! "$RGB" = "8191aa" ]; do
-          getColor 160 1150
-          sleep 1
-      done
-
-      # If defeat text found click retry
-      if [ "$RGB" = "8191aa" ]; then
-        input tap 550 1700
+# Attempts campaign flag, params: 1 to load and close for daily quest, 2 to attempt until victory/defeat, 3 to repeat until victory
+function attemptCampaign() {
+    case "$1" in
+    "1")
+        echo "Loading campaign level for daily quest."
+        # Press Begin
+        input tap 550 1650
         sleep 1
+
+        # Check for 'boss' text in enemy formation
+        getColor 550 740
+        if [ "$RGB" = "f1d79f" ]; then
+            input tap 550 1450
+        fi
+
+        sleep 2
+        # Press begin battle
+        input tap 550 1850
+        sleep 2
+
+        # Press Pause
+        input tap 80 1460
+        wait
+        # Press Exit battle
+        input tap 230 960
+
+        # VerifyRGB with the top left of the campaign button
+        wait
+        verifyRGB 1050 1800 493018 "Campaign level loaded successfully."
+        echo
+        ;;
+    "2")
+        echo "Attemping campaign flag."
+        # Press Begin
+        input tap 550 1650
+        sleep 1
+
+        # Check for 'boss' text in enemy formation
+        getColor 550 740
+        if [ "$RGB" = "f1d79f" ]; then
+            input tap 550 1450
+        fi
+
+        sleep 2
         # Press begin battle
         input tap 550 1850
         sleep 1
-      fi
-    done
+
+        waitForBattleToFinish 10
+
+        # # Press Pause
+        # input tap 80 1460
+        # wait
+        # # Press Exit battle
+        # input tap 230 960
+
+        # Press Exit battle
+        input tap 230 960
+        # Press Exit battle
+        input tap 230 960
+
+
+        # VerifyRGB with the top left of the campaign button
+        wait
+        verifyRGB 1050 1800 493018 "Campaign flag attempted successfully."
+        echo
+        ;;
+    "3")
+        # Press Begin
+        input tap 550 1650
+        sleep 1
+
+        # Check for 'boss' text in enemy formation
+        getColor 550 740
+        if [ "$RGB" = "f1d79f" ]; then
+            input tap 550 1450
+        fi
+
+        sleep 2
+        # Press begin battle
+        input tap 550 1850
+        sleep 1
+
+        while [ $victory = "false" ]; do
+          getColor 160 1150
+          # While defeat text not found
+          while [ ! "$RGB" = "8191aa" ]; do
+              getColor 160 1150
+              sleep 1
+          done
+
+          # If defeat text found click retry
+          if [ "$RGB" = "8191aa" ]; then
+            input tap 550 1700
+            sleep 1
+            # Press begin battle
+            input tap 550 1850
+            sleep 1
+          fi
+        done
+        ;;
+    *)
+        echo "Invalid parameter for attemptCampaign."
+        exit
+        ;;
+    esac
 }
 
 # Collects fast rewards (Only at campaign page, no error checking)
@@ -395,7 +438,9 @@ function collectFriendsAndMercenaries() {
     # Click send and recieve
     input tap 930 1600
     wait
-    # Click Mercenaries
+
+    #TODO: Check if its necessary to send mercenaries
+    #Click Mercenaries
     input tap 720 1760
     wait
     # Click manage
@@ -409,6 +454,7 @@ function collectFriendsAndMercenaries() {
     sleep 1
     # Click close button twice to exit
     input tap 70 1810
+
     input tap 70 1810
     wait
     verifyRGB 1050 1800 493018 "Companion point collection and mercenary lending successfull."
@@ -546,9 +592,6 @@ function legendsTournament() {
     input tap 1000 1800
     input tap 990 380
     wait
-
-    # Repeat a battle for as long as totalAmountArenaTries
-    #TODO Replace with 'Free' text detection
 
     #Press Challenge
     input tap 550 1840
@@ -699,10 +742,6 @@ function guildHunts() {
         #wait 90s for battle to finish
         #sleep 120
         waitForBattleToFinish 90
-
-        #RODO check for unlock notice
-        getcolor 330 725
-        echo "Notice: " $RGB
         # Click collect
         input tap 540 1800
         sleep 2
@@ -868,7 +907,7 @@ lootAfkChest #Done
 fastRewards #Done
 collectMail #Done
 collectFriendsAndMercenaries #Done
-challengeBoss #Done
+attemptCampaign "2" #Done
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
@@ -898,7 +937,7 @@ lootAfkChest #Done
 fastRewards #Done
 collectMail #Done
 collectFriendsAndMercenaries #Done
-challengeBoss #Done
+attemptCampaign "2" #Done
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
