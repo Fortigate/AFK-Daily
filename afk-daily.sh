@@ -850,7 +850,7 @@ function storeBuyDust() {
     #TODO Add verification
     getColor 175 840
     echo "  Dust colour found: " $RGB
-    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ]|| [ "$RGB" == "bb7edd" ; then
+    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ] ; then
       input tap 170 840
       wait
       #Click Purchase (Two clicks it can be in two locations)
@@ -886,7 +886,7 @@ function collectQuestChests() {
     getColor 700 670
     while [ "$RGB" == "7cfff3" ]; do
       # If blue 'completed' bar found, click collect
-        echo $LGREEN"Completed quest, collecting.."$NC
+        echo $LGREEN"  Quest found, collecting.."$NC
         input tap 930 680
         wait
         getColor 700 670
