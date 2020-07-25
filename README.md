@@ -5,7 +5,7 @@
 		<b>Automate daily activities within the AFK Arena game</b>
 	</p>
 	
-<br>Updated fork of https://github.com/zebscripts/AFK-Daily. Please visit his project for an extremely comprehensive readme!</br>
+<br>Updated fork of https://github.com/zebscripts/AFK-Daily. Please visit his project for a much more detailed readme!</br>
 	
 ![alt text](https://i.imgur.com/144Dzjk.png)
 	
