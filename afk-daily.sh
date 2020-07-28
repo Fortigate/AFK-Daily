@@ -113,7 +113,7 @@ function openMenu() {
 function waitUntilGameActive {
   # Loops until the game has launched
   getColor 1050 1800
-  while [ "$RGB" != "493018" ]; do
+  while [ "$RGB" != "482f16" ]; do
       sleep 1
       getColor 1050 1800
   done
@@ -152,7 +152,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
+        verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
         echo
         ;;
     "2")
@@ -183,7 +183,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
+        verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
         echo
         ;;
     "3")
@@ -214,7 +214,7 @@ function switchCharacter() {
           input tap 70 1810
           sleep 1
         fi
-        verifyRGB 1050 1800 493018 $GREEN"Character checked."$NC
+        verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
         echo
         ;;
     *)
@@ -294,11 +294,12 @@ function lootAfkChest() {
     sleep 1
     # VerifyRGB with the top left of the campaign button
     wait
-    verifyRGB 1050 1800 493018 $GREEN"AFK Chest looted successsfully."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"AFK Chest looted successsfully."$NC
     echo
 }
 
-# Attempts campaign flag, params: 1 to load and close for daily quest, 2 to attempt until victory/defeat, 3 to repeat until victory
+# Attempts campaign flag. Params: "1" to load and close for daily quest, "2" to attempt until victory/defeat
+# "3" to continously retry, advancing to the next flag on victory
 function attemptCampaign() {
     case "$1" in
     "1")
@@ -326,7 +327,7 @@ function attemptCampaign() {
 
         # VerifyRGB with the top left of the campaign button
         wait
-        verifyRGB 1050 1800 493018 $GREEN"Campaign level loaded successfully."$NC
+        verifyRGB 1050 1800 482f16 $GREEN"Campaign level loaded successfully."$NC
         echo
         ;;
     "2")
@@ -363,7 +364,7 @@ function attemptCampaign() {
 
         # VerifyRGB with the top left of the campaign button
         wait
-        verifyRGB 1050 1800 493018 $GREEN"Campaign flag attempted successfully."$NC
+        verifyRGB 1050 1800 482f16 $GREEN"Campaign flag attempted successfully."$NC
         echo
         ;;
     "3")
@@ -435,7 +436,7 @@ function fastRewards() {
     input tap 400 1250
     # VerifyRGB with the top left of the campaign button
     wait
-    verifyRGB 1050 1800 493018 $GREEN"Fast Rewards collected."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Fast Rewards collected."$NC
     echo
   else
     echo $ORANGE"No fast rewards notication badge found."$NC
@@ -460,7 +461,7 @@ collectMail() {
     input tap 110 1850
 
     sleep 2
-    verifyRGB 1050 1800 493018 $GREEN"Successfully collected Mail."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Successfully collected Mail."$NC
     echo
   else
     echo $ORANGE"No mail notification found"$NC
@@ -498,7 +499,7 @@ function collectFriendsAndMercenaries() {
 
     input tap 70 1810
     wait
-    verifyRGB 1050 1800 493018 $GREEN"Companion point collection and mercenary lending successfull."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Companion point collection and mercenary lending successfull."$NC
     echo
   else
     echo $ORANGE"No Friends notification badge found"$NC
@@ -543,7 +544,7 @@ function collectBounties() {
     input tap 70 1810
 
     wait
-    verifyRGB 1050 1800 493018 $GREEN"Successfully finished Bounties."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Successfully finished Bounties."$NC
     echo
 }
 
@@ -605,7 +606,7 @@ function arenaOfHeroes() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 $GREEN"Arena of Heroes successfully checked."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Arena of Heroes successfully checked."$NC
     echo
 }
 
@@ -678,7 +679,7 @@ function legendsTournament() {
     input tap 70 1810
     sleep 1
 
-    verifyRGB 1050 1800 493018 $GREEN"Legends Tournament sucessfully checked."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Legends Tournament sucessfully checked."$NC
     echo
 }
 
@@ -713,7 +714,7 @@ function kingsTower() {
     # input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 $GREEN"Kings Tower attempted successfully."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Kings Tower attempted successfully."$NC
     echo
 }
 
@@ -778,7 +779,7 @@ function guildHunts() {
       input tap 70 1810
 
       sleep 1
-      verifyRGB 1050 1800 493018 $GREEN"Guild Hunts battled successfully."$NC
+      verifyRGB 1050 1800 482f16 $GREEN"Guild Hunts battled successfully."$NC
       echo
       return
     fi
@@ -811,7 +812,7 @@ function guildHunts() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 $GREEN"Guild Hunts battled successfully."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Guild Hunts battled successfully."$NC
     echo
 }
 
@@ -873,7 +874,7 @@ function storeBuyDust() {
     input tap 70 1810
 
     sleep 1
-    verifyRGB 1050 1800 493018 $GREEN"Daily Dust purchase attempted successfully."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Daily Dust purchase attempted successfully."$NC
     echo
 }
 
@@ -919,7 +920,7 @@ function collectQuestChests() {
     input tap 70 1650
     sleep 1
 
-    verifyRGB 1050 1800 493018 $GREEN"Successfully collected daily Quest chests."$NC
+    verifyRGB 1050 1800 482f16 $GREEN"Successfully collected daily Quest chests."$NC
     echo
 }
 
