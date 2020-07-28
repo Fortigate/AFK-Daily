@@ -4,6 +4,7 @@
 # CONFIG: Modify accordingly to your game!
 victory=false
 TIMER=0
+COUNTER=0
 ## Text Colours
 GREEN='\033[0;32m'
 LGREEN='\033[1;32m'
@@ -116,6 +117,7 @@ function waitUntilGameActive {
       sleep 1
       getColor 1050 1800
   done
+  sleep 1
 }
 
 # Switches to another character. Params: character slot (1, 2 or 3)
@@ -227,25 +229,25 @@ function switchTab() {
     case "$1" in
     "Campaign")
         input tap 550 1850
-        wait
+        sleep 2
         verifyRGB 450 1775 cc9261 $PURPLE"Switched to the Campaign Tab."$NC
         echo
         ;;
     "Dark Forest")
         input tap 300 1850
-        wait
+        sleep 2
         verifyRGB 240 1775 d49a61 $PURPLE"Switched to the Dark Forest Tab."$NC
         echo
         ;;
     "Ranhorn")
         input tap 110 1850
-        wait
+        sleep 2
         verifyRGB 20 1775 d49a61 $PURPLE"Switched to the Rahorn Tab."$NC
         echo
         ;;
     *)
         echo $RED"Failed to switch to another Tab."$NC
-        exit
+        exit 1
         ;;
     esac
 }
@@ -265,7 +267,7 @@ function waitForBattleToFinish() {
       fi
       getColor 420 380
       # echo "Vic " $RGB
-      if [ "$RGB" = "ca9c5d" ]; then
+      if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
         echo $LGREEN"  Victory!"$NC
         return
       fi
@@ -285,7 +287,9 @@ function lootAfkChest() {
     # Click claim
     input tap 700 1350
     sleep 1
-    # Close Window
+    # Close Window twice, in case we have level up window
+    input tap 550 1850
+    sleep 1
     input tap 550 1850
     sleep 1
     # VerifyRGB with the top left of the campaign button
@@ -327,6 +331,7 @@ function attemptCampaign() {
         ;;
     "2")
         echo $CYAN"Attempting campaign flag."$NC
+        sleep 1
         # Press Begin
         input tap 550 1650
         sleep 1
@@ -362,7 +367,7 @@ function attemptCampaign() {
         echo
         ;;
     "3")
-        echo $GREEN"Retrying until victorious"$NC
+        echo $GREEN"Retrying until victorious.."$NC
         # Press Begin
         input tap 550 1650
         sleep 1
@@ -379,26 +384,31 @@ function attemptCampaign() {
         sleep 1
 
         while [ $victory = "false" ]; do
+          # echo "Checking.. " $TIMER
           getColor 160 1150
-          # While defeat text not found
-          while [ ! "$RGB" = "8191aa" ]; do
-              getColor 160 1150
-              sleep 1
-          done
-
-          # If defeat text found click retry
+          # echo "Def " $RGB
           if [ "$RGB" = "8191aa" ]; then
-            input tap 550 1700
+            let "COUNTER=COUNTER+1"
+            echo $RED"Defeat!"$NC "#"$COUNTER
+            input tap 550 1500
             sleep 1
-            # Press begin battle
-            input tap 550 1850
-            sleep 1
+            attemptCampaign "3"
           fi
+          getColor 420 380
+          # echo "Vic " $RGB
+          if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
+            let "COUNTER=0"
+            echo $LGREEN"Victory! Moving to next flag.."$NC
+            input tap 550 1500
+            sleep 1
+            attemptCampaign "3"
+          fi
+          sleep 1
         done
         ;;
     *)
         echo $RED"Invalid parameter for attemptCampaign."$NC
-        exit
+        exit 1
         ;;
     esac
 }
@@ -565,13 +575,13 @@ function arenaOfHeroes() {
       sleep 1
       while [ "$RGB" = "fef7ec" ]; do
         echo $LGREEN"  Free arena battle found"$NC
-        #Select lowest slot
-        input tap 820 1400
+        #Select second lowest slot
+        input tap 820 1225
         sleep 1
         #Click 'Begin Battle'
         input tap 550 1850
-        #WAit for battle to finish
-        waitForBattleToFinish 10
+        #Wait for battle to finish
+        waitForBattleToFinish 15
         #Tap to clear loot
         input tap 550 1550
         wait
@@ -725,13 +735,12 @@ function guildHunts() {
     # echo "Wrizz VS: " + $RGB
     if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
       while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
-        echo $LGREEN"Wrizz active, battling.."$NC
+        echo $LGREEN"  Wrizz active, battling.."$NC
         # Clic Begin Battles
         input tap 550 1850
 
-        #wait 90s for battle to finish
-        #sleep 120
-        waitForBattleToFinish 90
+        #wait for battle end
+        waitForBattleToFinish 40
 
         # Click collect
         input tap 540 1800
@@ -743,7 +752,7 @@ function guildHunts() {
         getColor 600 80
       done
     else
-      echo $ORANGE"  Wrizz not found"$NC
+      echo $ORANGE"  Wrizz checked"$NC
     fi
 
     # Soren
@@ -780,12 +789,10 @@ function guildHunts() {
     if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
       echo $LGREEN"Soren active, battling.."$NC
       while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
-        # Clic Begin Battles
+        # Click Begin Battles
         input tap 550 1850
-
-        #wait 90s for battle to finish
-        #sleep 120
-        waitForBattleToFinish 90
+        #wait for battle to finish
+        waitForBattleToFinish 40
         # Click collect
         input tap 540 1800
         sleep 2
@@ -796,6 +803,7 @@ function guildHunts() {
         getColor 600 80
       done
     fi
+    echo $ORANGE"  Soren checked"$NC
 
     #Click back arrow twice
     input tap 70 1810
@@ -850,7 +858,7 @@ function storeBuyDust() {
     #TODO Add verification
     getColor 175 840
     echo "  Dust colour found: " $RGB
-    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ] ; then
+    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ]  ||  [ "$RGB" == "bb7dde" ]; then
       input tap 170 840
       wait
       #Click Purchase (Two clicks it can be in two locations)
