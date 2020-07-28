@@ -39,7 +39,7 @@ function test() {
         ((COUNT = COUNT + 1)) # Increment
     done
     #switchApp
-    exit
+    exit 1
 }
 
 # Default wait time for actions
@@ -98,7 +98,7 @@ function verifyRGB() {
         echo
         echo "$5"
         # switchApp
-        exit
+        exit 1
     else
         echo "$4"
     fi
@@ -219,7 +219,7 @@ function switchCharacter() {
         ;;
     *)
         echo "Server check failed."
-        exit
+        exit 1
         ;;
     esac
 }
@@ -1008,4 +1008,4 @@ collectQuestChests
 # switchCharacter "1"
 
 echo $GREEN"End of script!"$NC
-exit
+exit 0
