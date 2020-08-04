@@ -3,7 +3,8 @@
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
 victory=false
-TIMER=0
+LAUNCHTIMER=0
+BATTLETIMER=0
 COUNTER=0
 ## Text Colours
 GREEN='\033[0;32m'
@@ -111,13 +112,21 @@ function openMenu() {
 }
 
 function waitUntilGameActive {
-  # Loops until the game has launched
+  # Loops until the game has launched, we use a pixel near the chat button
+  # TODO Add timeout
   getColor 1050 1800
   while [ "$RGB" != "482f16" ]; do
-      sleep 1
+      wait
       getColor 1050 1800
+      let "LAUNCHTIMER=LAUNCHTIMER+1"
+      # If we're unsuccessful for 60 cycles somethings amiss so we exit
+      if [ $LAUNCHTIMER -gt 60 ]; then
+        echo $RED"Timed out while launching"$NC
+        closeApp
+        exit 1
+      fi
   done
-  sleep 1
+  sleep 5
 }
 
 # Switches to another character. Params: character slot (1, 2 or 3)
@@ -252,27 +261,23 @@ function switchTab() {
     esac
 }
 
-# Checks for a battle to finish. Params: Seconds
+# Checks for a battle to finish. Param: Seconds before starting to check for victory/defeat screen
 function waitForBattleToFinish() {
-    # echo "Waiting for battle to finish"
     sleep "$1"
-    let "TIMER=0"
-    while [ $TIMER -lt 90 ]; do
-      # echo "Checking.. " $TIMER
+    let "BATTLETIMER=0"
+    while [ $BATTLETIMER -lt 90 ]; do
       getColor 160 1150
-      # echo "Def " $RGB
-      if [ "$RGB" = "8191aa" ]; then
+      if [ "$RGB" = "8191aa" ] || [ "$RGB" = "677790" ]; then
         echo $ORANGE"  Defeat!"$NC
         return
       fi
       getColor 420 380
-      # echo "Vic " $RGB
       if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
         echo $LGREEN"  Victory!"$NC
         return
       fi
-      let "TIMER=TIMER+1"
-      sleep 1
+      let "BATTLETIMER=BATTLETIMER+1"
+      wait
     done
     echo $RED"Battle status timer expired!"$NC
 }
