@@ -720,23 +720,43 @@ function kingsTower() {
 # Battles against Guild bosses
 function guildHunts() {
     echo $CYAN"Attempting Guild Hunts."$NC
-    #Press Guild Hall
+    # First we check Wrizz
+    # Click Guild Hall
     input tap 380 360
+    #Longer sleep for the loading animation
     sleep 3
-    #Press Guild Hunting
+    # Click Guild Hunting
     input tap 290 860
-    sleep 1
-    #Press Challenge
+    wait
+    # Click Challenge
     input tap 540 1800
-    sleep 2
+    wait
 
-    #Now we check for the VS text at the top of the screen to see if Wrizz is active
+    # Check for quick battles first, else check standard Wrizz battle
+    getColor 710 1820
+    if [ "$RGB" == "98ecc5" ]; then
+      while [ "$RGB" == "98ecc5" ]; do
+        echo $LGREEN"  Wrizz quick battle active, battling.."$NC
+        # Click Quick Battle
+        input tap 710 1820
+        wait
+        # Click Begin
+        input tap 725 1300
+        wait
+        # Click collect
+        input tap 540 1800
+        wait
+        #Check for VS text again
+        getColor 710 1820
+      done
+    fi
+
+    # We check for the VS text at the top of the screen to see if Wrizz is active
     getColor 600 80
-    # echo "Wrizz VS: " + $RGB
     if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
       while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
         echo $LGREEN"  Wrizz active, battling.."$NC
-        # Clic Begin Battles
+        # Click Begin Battles
         input tap 550 1850
 
         #wait for battle end
