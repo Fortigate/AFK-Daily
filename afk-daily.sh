@@ -588,9 +588,74 @@ function arenaOfHeroes() {
         input tap 550 1550
         wait
         #Tap to close Victory/Defeat screen
+        input tap 550 550
+        wait
+        #We need to be back at the challenge menu again before we check the 'Free' text
+        getColor 813 691
+      done
+    else
+      echo $ORANGE"  No free arena battles found"$NC
+    fi
+
+    #Close opponent list window
+    input tap 1000 380
+    wait
+    #Tap back
+    input tap 70 1810
+    wait
+    #Tap back
+    input tap 70 1810
+
+    wait
+    verifyRGB 1050 1800 482f16 $GREEN"Arena of Heroes successfully checked."$NC
+    echo
+}
+
+# Does the daily arena of heroes battles using skip feature
+function arenaOfHeroesQuick() {
+    echo $CYAN"Attempting Arena of Heroes battles."$NC
+    #Click "Arena of Heroes"
+    input tap 740 1050
+    wait
+    if [ "$pvpEvent" == false ]; then
+        #Click first card in list
+        input tap 550 450
+    else
+        # Click second card in list
+        input tap 550 900
+    fi
+    wait
+    #Click Record and close to clear the notification
+    input tap 1000 1800
+    wait
+    input tap 980 410
+    wait
+    #Click Challenge
+    input tap 540 1800
+    wait
+
+    # We try and detect the 'Free' text on the top opponent
+    getColor 813 691
+    if [ "$RGB" = "fef7ec" ]; then # If it's found..
+      wait
+      while [ "$RGB" = "fef7ec" ]; do # Loop battles until we don't detect the 'Free' text
+        echo $LGREEN"  Free arena battle found"$NC
+        #Select second lowest slot
+        input tap 820 1225
+        wait
+        #Click 'Begin Battle'
+        input tap 550 1850
+        wait
+        #Click skip
+        input tap 880 1470
+        wait
+        #Tap to clear loot
         input tap 550 1550
-        sleep 1
-        #we need to be back at the challenge menu again before we check 'free' pixel
+        wait
+        #Tap to close Victory/Defeat screen
+        input tap 550 1550
+        wait
+        #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 813 691
       done
     else
@@ -932,19 +997,11 @@ function collectQuestChests() {
     input tap 580 600
     wait
     input tap 70 1650
-    sleep 1
+    wait
 
     verifyRGB 1050 1800 482f16 $GREEN"Successfully collected daily Quest chests."$NC
     echo
 }
-
-# TODO: Make it pretty
-# RED='\033[0;34m'
-# NC='\033[0m' # No Color
-# printf "I ${RED}love${NC} Stack Overflow\n"
-
-# Test function (X, Y, amountTimes, waitTime)
-# test 700 670 3 0.5
 
 # --- Script Start --- #
 echo
@@ -954,11 +1011,17 @@ sleep 0.5
 startApp
 sleep 10
 
-#Wait until game is active
+# #Wait until game is active
 waitUntilGameActive
 
 echo $GREEN"Game loaded! starting activities.."$NC
 echo
+
+switchTab "Ranhorn"
+switchTab "Dark Forest"
+switchTab "Campaign"
+
+# attemptCampaign "3"
 
 # Load first character
 switchCharacter "1"
@@ -967,17 +1030,17 @@ openMenu
 # CAMPAIGN TAB
 switchTab "Campaign"
 lootAfkChest
-fastRewards
 collectMail
 collectFriendsAndMercenaries
+fastRewards
 attemptCampaign "2"
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
-collectBounties #Auto-fill required
-arenaOfHeroes #Edit for quick battle when unlocked
+collectBounties
+arenaOfHeroesQuick
 legendsTournament
-kingsTower #Changed for faction towers not unlocked
+kingsTower
 
 # RANHORN TAB
 switchTab "Ranhorn"
@@ -990,37 +1053,38 @@ switchTab "Campaign"
 lootAfkChest
 collectQuestChests
 
-# # Load second character
-# switchCharacter "2"
-# openMenu
-#
-# # CAMPAIGN TAB
-# switchTab "Campaign"
-# lootAfkChest
-# fastRewards
-# collectMail
-# collectFriendsAndMercenaries
-# attemptCampaign "2"
-#
-# # DARK FOREST TAB
-# switchTab "Dark Forest"
-# # collectBounties #Auto-fill required
-# arenaOfHeroes #Edit for quick battle when unlocked
-# # legendsTournament
-# kingsTower #Changed for faction towers not unlocked
-#
-# # RANHORN TAB
-# switchTab "Ranhorn"
-# guildHunts
-# # twistedRealmBoss #12-40 required
-# storeBuyDust # TODO Buy elite soulstone as well
-#
-# # CAMPAIGN TAB
-# switchTab "Campaign"
-# lootAfkChest
-# collectQuestChests
-#
-# switchCharacter "1"
+# Load second character
+switchCharacter "2"
+openMenu
+
+# CAMPAIGN TAB
+switchTab "Campaign"
+lootAfkChest
+fastRewards
+collectMail
+collectFriendsAndMercenaries
+attemptCampaign "2"
+
+# DARK FOREST TAB
+switchTab "Dark Forest"
+# collectBounties
+arenaOfHeroes
+# legendsTournament
+kingsTower
+
+# RANHORN TAB
+switchTab "Ranhorn"
+guildHunts
+# twistedRealmBoss #12-40 required
+storeBuyDust # TODO Buy elite soulstone as well
+
+# CAMPAIGN TAB
+switchTab "Campaign"
+lootAfkChest
+collectQuestChests
+
+switchCharacter "1"
 
 echo $GREEN"End of script!"$NC
+closeApp
 exit 0
