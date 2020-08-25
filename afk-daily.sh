@@ -117,6 +117,8 @@ function waitUntilGameActive {
   getColor 1050 1800
   while [ "$RGB" != "482f16" ]; do
       wait
+      #we click the campaign button in case we have deal popups obscuring the pixel
+      input tap 550 1850
       getColor 1050 1800
       let "LAUNCHTIMER=LAUNCHTIMER+1"
       # If we're unsuccessful for 60 cycles somethings amiss so we exit
@@ -267,11 +269,13 @@ function waitForBattleToFinish() {
     let "BATTLETIMER=0"
     while [ $BATTLETIMER -lt 90 ]; do
       getColor 160 1150
-      if [ "$RGB" = "8191aa" ] || [ "$RGB" = "677790" ]; then
+      # echo "Defeat Debug: " $RGB
+      if [ "$RGB" = "8495a6" ] || [ "$RGB" = "677790" ]; then
         echo $ORANGE"  Defeat!"$NC
         return
       fi
       getColor 420 380
+      # echo "Victory Debug: " $RGB
       if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
         echo $LGREEN"  Victory!"$NC
         return
@@ -338,7 +342,7 @@ function attemptCampaign() {
     "2")
         echo $CYAN"Attempting campaign flag."$NC
         #Longer sleep for characters to load
-        sleep 2
+        sleep 4
         # Click Begin
         input tap 550 1650
         wait
@@ -388,7 +392,7 @@ function attemptCampaign() {
         while [ $victory = "false" ]; do
           getColor 160 1150
           # echo "Def " $RGB
-          if [ "$RGB" = "8191aa" ]; then
+          if [ "$RGB" = "8495a6" ]; then
             let "COUNTER=COUNTER+1"
             echo $RED"Defeat!"$NC "#"$COUNTER
             input tap 550 1500
@@ -434,6 +438,7 @@ function fastRewards() {
     wait
     # Click close
     input tap 400 1250
+    wait
     # VerifyRGB with the top left of the chat button
     wait
     verifyRGB 1050 1800 482f16 $GREEN"Fast Rewards collected."$NC
@@ -448,7 +453,8 @@ function fastRewards() {
 collectMail() {
     echo $CYAN"Attempting to collect mail."$NC
   getColor 1000 580
-  if [ "$RGB" == "fe2f1e" ]; then
+  # echo "collectMail collection debug: " $RGB
+  if [ "$RGB" == "ff301c" ]; then
     # Click mail icon
     input tap 960 630
     wait
@@ -456,7 +462,7 @@ collectMail() {
     input tap 790 1470
     wait
     # Click outside the menu twice to close
-    input tap 110 1850
+    input tap 550 1500
     wait
     input tap 110 1850
 
@@ -473,7 +479,8 @@ collectMail() {
 function collectFriendsAndMercenaries() {
   echo $CYAN"Attempting companion point collection and mercenary lending."$NC
   getColor 1000 760
-  if [ "$RGB" == "fd1f06" ]; then
+  # echo "collectFriendsAndMercenaries collection debug: " $RGB
+  if [ "$RGB" == "f91c0b" ]; then
     # Clic friends
     input tap 970 810
     wait
@@ -647,14 +654,15 @@ function arenaOfHeroesQuick() {
         input tap 550 1850
         wait
         #Click skip
-        input tap 880 1470
+        input tap 800 1450
+        input tap 870 1450
         wait
         #Tap to clear loot
         input tap 550 1550
         wait
         #Tap to close Victory/Defeat screen
         input tap 550 1550
-        wait
+        sleep 4
         #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 813 691
       done
@@ -722,7 +730,8 @@ function legendsTournament() {
         #Click Begin Battle
         input tap 550 1850
         #Make sure we're loaded then skip
-        sleep 3
+        sleep 2
+        input tap 800 1450
         input tap 870 1450
         wait
         #Tap to close Victory/Defeat screen
@@ -800,7 +809,8 @@ function guildHunts() {
     # Check for quick battles first, else check standard Wrizz battle
     getColor 710 1820
     if [ "$RGB" == "98ecc5" ]; then
-      while [ "$RGB" == "98ecc5" ]; do
+    if [ "$RGB" == "97eac2" ]; then
+      while [ "$RGB" == "97eac2" ]; do
         echo $LGREEN"  Wrizz quick battle active, battling.."$NC
         # Click Quick Battle
         input tap 710 1820
@@ -811,6 +821,8 @@ function guildHunts() {
         # Click collect
         input tap 540 1800
         wait
+        input tap 540 1800
+        sleep 3
         #Check for VS text again
         getColor 710 1820
       done
@@ -830,9 +842,11 @@ function guildHunts() {
         # Click collect
         input tap 540 1800
         wait
-        # Click Challenge
         input tap 540 1800
         wait
+        # Click Challenge
+        input tap 540 1800
+        sleep 3
         #Check for VS text again
         getColor 600 80
       done
@@ -845,6 +859,29 @@ function guildHunts() {
     #Click the right -> arrow
     input tap 970 890
     wait
+
+    # Check for quick battles first, else check standard Soren battle
+    getColor 710 1820
+    # echo "Soren quick RGB: " $RGB
+    if [ "$RGB" == "97eac2" ]; then
+      while [ "$RGB" == "97eac2" ]; do
+        echo $LGREEN"  Soren quick battle active, battling.."$NC
+        # Click Quick Battle
+        input tap 710 1820
+        wait
+        # Click Begin
+        input tap 725 1300
+        wait
+        # Click collect
+        input tap 540 1800
+        wait
+        input tap 540 1800
+        sleep 3
+        #Check for quick battle text again
+        getColor 710 1820
+        echo "Soren quick RGB 2nd: " $RGB
+      done
+    fi
 
     # Click Challenge
     input tap 540 1800
@@ -881,9 +918,11 @@ function guildHunts() {
         # Click collect
         input tap 540 1800
         wait
-        # Click Challenge
         input tap 540 1800
         wait
+        # Click Challenge
+        input tap 540 1800
+        sleep 3
         #Check for VS text again
         getColor 600 80
       done
@@ -937,7 +976,7 @@ function storeBuyDust() {
     wait
     # Check for purple dust pixel
     getColor 175 840
-    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ]  ||  [ "$RGB" == "bb7dde" ]; then
+    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ]  ||  [ "$RGB" == "bb7dde" ]  ||  [ "$RGB" == "bb80de" ]  ||  [ "$RGB" == "bb88de" ]; then
       input tap 170 840
       wait
       #Click Purchase (Two clicks as it can appear in two locations)
@@ -972,7 +1011,8 @@ function collectQuestChests() {
 
     # Collect Quests loop
     getColor 700 670
-    while [ "$RGB" == "7cfff3" ]; do
+    # echo "Quest Debug: " $RGB
+    while [ "$RGB" == "7dfff1" ]; do
       # If blue 'completed' bar found, click collect
         echo $LGREEN"  Quest found, collecting.."$NC
         input tap 930 680
