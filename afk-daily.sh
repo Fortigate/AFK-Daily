@@ -3,6 +3,7 @@
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
 victory=false
+RGBDEBUG=false
 LAUNCHTIMER=0
 BATTLETIMER=0
 COUNTER=0
@@ -17,7 +18,6 @@ NC='\033[0m' # No Color
 
 # Probably you don't need to modify this. Do it if you know what you're doing, I won't blame you (unless you blame me).
 DEVICEWIDTH=1080
-pvpEvent=false
 
 # Do not modify
 RGB=00000000
@@ -82,7 +82,9 @@ function readRGB() {
     RGB=$(dd if="$SCREENSHOTLOCATION" bs=4 skip="$offset" count=1 2>/dev/null | hexdump -C)
     RGB=${RGB:9:9}
     RGB="${RGB// /}"
-    # echo "RGB: $RGB"
+    if [ $RGBDEBUG = true ]; then
+      echo "RGB debug: $RGB"
+    fi
 }
 
 # Sets RGB. Params: X, Y
@@ -98,7 +100,7 @@ function verifyRGB() {
         echo $RED"VerifyRGB: Failure! Expected "$3", but got "$RGB" instead."$NC
         echo
         echo "$5"
-        # switchApp
+        closeApp
         exit 1
     else
         echo "$4"
@@ -270,7 +272,7 @@ function waitForBattleToFinish() {
     while [ $BATTLETIMER -lt 90 ]; do
       getColor 160 1150
       # echo "Defeat Debug: " $RGB
-      if [ "$RGB" = "8495a6" ] || [ "$RGB" = "677790" ]; then
+      if [ "$RGB" = "8495a6" ] || [ "$RGB" = "617a92" ] || [ "$RGB" = "8091a9" ]; then
         echo $ORANGE"  Defeat!"$NC
         return
       fi
@@ -363,8 +365,6 @@ function attemptCampaign() {
 
         # Click exit battle
         input tap 230 960
-        # Click exit battle
-        input tap 230 960
 
         # VerifyRGB with the top left of the chat button
         wait
@@ -392,7 +392,7 @@ function attemptCampaign() {
         while [ $victory = "false" ]; do
           getColor 160 1150
           # echo "Def " $RGB
-          if [ "$RGB" = "8495a6" ]; then
+          if [ "$RGB" = "8495a6" ] || [ "$RGB" = "8091a9" ] || [ "$RGB" = "090a11" ]; then
             let "COUNTER=COUNTER+1"
             echo $RED"Defeat!"$NC "#"$COUNTER
             input tap 550 1500
@@ -403,7 +403,8 @@ function attemptCampaign() {
           # echo "Vic " $RGB
           if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
             let "COUNTER=0"
-            echo $LGREEN"Victory! Moving to next flag.."$NC
+            echo $LGREEN"Victory! Moving to next flag.."$NC $(date +%H:%M)
+            # exit 0
             input tap 550 1500
             wait
             attemptCampaign "3"
@@ -422,6 +423,7 @@ function attemptCampaign() {
 function fastRewards() {
   echo $CYAN"Attempting daily fast reward collection."$NC
   getColor 980 1620
+  # echo "fastReward collection debug: " $RGB
   if [ "$RGB" == "ed1f06" ]; then
     # Click fast rewards
     input tap 950 1660
@@ -561,13 +563,8 @@ function arenaOfHeroes() {
     #Click "Arena of Heroes"
     input tap 740 1050
     wait
-    if [ "$pvpEvent" == false ]; then
-        #Click first card in list
-        input tap 550 450
-    else
-        # Click second card in list
-        input tap 550 900
-    fi
+    #Click first card in list
+    input tap 550 450
     wait
     #Click Record and close to clear the notification
     input tap 1000 1800
@@ -592,10 +589,10 @@ function arenaOfHeroes() {
         #Wait for battle to finish
         waitForBattleToFinish 15
         #Tap to clear loot
-        input tap 550 1550
+        input tap 560 430
         wait
         #Tap to close Victory/Defeat screen
-        input tap 550 550
+        input tap 560 430
         wait
         #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 813 691
@@ -624,13 +621,8 @@ function arenaOfHeroesQuick() {
     #Click "Arena of Heroes"
     input tap 740 1050
     wait
-    if [ "$pvpEvent" == false ]; then
-        #Click first card in list
-        input tap 550 450
-    else
-        # Click second card in list
-        input tap 550 900
-    fi
+    #Click first card in list
+    input tap 550 450
     wait
     #Click Record and close to clear the notification
     input tap 1000 1800
@@ -652,16 +644,16 @@ function arenaOfHeroesQuick() {
         wait
         #Click 'Begin Battle'
         input tap 550 1850
-        wait
+        sleep 1
         #Click skip
         input tap 800 1450
-        input tap 870 1450
+        # input tap 870 1450
         wait
         #Tap to clear loot
-        input tap 550 1550
+        input tap 560 430
         wait
         #Tap to close Victory/Defeat screen
-        input tap 550 1550
+        input tap 560 430
         sleep 4
         #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 813 691
@@ -690,14 +682,13 @@ function legendsTournament() {
     # Click Arena of Heroes
     input tap 740 1050
     wait
-    if [ "$pvpEvent" == false ]; then
-        #Second slot
-        input tap 550 900
-    else
-        #Third Slot
-        input tap 550 1450
-    fi
+
+    #Second slot
+    input tap 550 900
+    # #Third Slot
+    # input tap 550 1450
     wait
+
     #Collect Gladiator Coins
     input tap 550 280
     wait
@@ -720,7 +711,8 @@ function legendsTournament() {
       while [ "$RGB" = "ffffff" ]; do # Loop battles until we don't detect the 'Free' text
         echo $LGREEN"  Free legends battle found"$NC
         #Select lowest slot
-        input tap 800 1150
+        # input tap 800 940 #middle slot
+        input tap 800 1150 #bottom slot
         wait
         #Click 'Next Team twice'
         input tap 550 1850
@@ -734,6 +726,7 @@ function legendsTournament() {
         input tap 800 1450
         input tap 870 1450
         wait
+
         #Tap to close Victory/Defeat screen
         input tap 550 1850
         wait
@@ -759,36 +752,75 @@ function legendsTournament() {
     echo
 }
 
+function openTower() {
+  #Click King's Tower
+  input tap 500 870
+  wait
+  #Click non-faction tower
+  input tap 550 900
+  wait
+}
+
 # Battles once in the kings tower
 function kingsTower() {
-    echo $CYAN"Attempting King's tower for daily quest."$NC
-    #Click King's Tower
-    input tap 500 870
-    wait
-    #Click non-faction tower
-    input tap 550 900
-    wait
-    #Click "Challenge"
-    input tap 540 1350
-    wait
-    #Click begin battle
-    input tap 550 1850
-    wait
-    # Wait for battle to finish
-    waitForBattleToFinish 10
+    case "$1" in
+    "1")
+      echo $CYAN"Attempting King's tower for daily quest."$NC
+      #Click "Challenge"
+      input tap 540 1350
+      wait
+      #Click begin battle
+      input tap 550 1850
+      wait
+      # Wait for battle to finish
+      waitForBattleToFinish 10
 
-    #Click exit battle
-    input tap 230 960
-    wait
-    #Click back arrow
-    input tap 70 1810
-    #Below is if you have faction towers unlocked
-    wait
-    input tap 70 1810
+      #Click exit battle
+      input tap 230 960
+      wait
+      #Click back arrow
+      input tap 70 1810
+      #Below is if you have faction towers unlocked
+      wait
+      input tap 70 1810
 
-    wait
-    verifyRGB 1050 1800 482f16 $GREEN"Kings Tower attempted successfully."$NC
-    echo
+      wait
+      verifyRGB 1050 1800 482f16 $GREEN"Kings Tower attempted successfully."$NC
+      echo
+      ;;
+    "2")
+      #Click "Challenge"
+      input tap 540 1350
+      wait
+      #Click begin battle
+      input tap 550 1850
+      wait
+
+      while [ $victory = "false" ]; do
+        getColor 160 1150
+        if [ "$RGB" = "8495a6" ] || [ "$RGB" = "8091a9" ] || [ "$RGB" = "090a11" ]; then
+          let "COUNTER=COUNTER+1"
+          echo $RED"Defeat!"$NC "#"$COUNTER
+          input tap 550 1500
+          wait
+          kingsTower "2"
+        fi
+        getColor 420 380
+        if [ "$RGB" = "ca9c5d" ] || [ "$RGB" = "4b3a23" ]; then
+          let "COUNTER=0"
+          echo $LGREEN"Victory!"$NC $(date +%H:%M)
+          input tap 550 1500
+          wait
+          kingsTower "2"
+        fi
+      wait
+      done
+      ;;
+    *)
+      echo $RED"Invalid parameter for attemptCampaign."$NC
+      exit 1
+      ;;
+    esac
 }
 
 # Battles against Guild bosses
@@ -798,7 +830,7 @@ function guildHunts() {
     # Click Guild Hall
     input tap 380 360
     #Longer sleep for the loading animation
-    sleep 3
+    sleep 5
     # Click Guild Hunting
     input tap 290 860
     wait
@@ -808,7 +840,6 @@ function guildHunts() {
 
     # Check for quick battles first, else check standard Wrizz battle
     getColor 710 1820
-    if [ "$RGB" == "98ecc5" ]; then
     if [ "$RGB" == "97eac2" ]; then
       while [ "$RGB" == "97eac2" ]; do
         echo $LGREEN"  Wrizz quick battle active, battling.."$NC
@@ -830,8 +861,8 @@ function guildHunts() {
 
     # We check for the VS text at the top of the screen to see if Wrizz is active
     getColor 600 80
-    if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
-      while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
+    if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ] || [ "$RGB" == "efde99" ]; then
+      while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ] || [ "$RGB" == "efde99" ]; do
         echo $LGREEN"  Wrizz active, battling.."$NC
         # Click Begin Battles
         input tap 550 1850
@@ -879,11 +910,11 @@ function guildHunts() {
         sleep 3
         #Check for quick battle text again
         getColor 710 1820
-        echo "Soren quick RGB 2nd: " $RGB
       done
     fi
 
     # Click Challenge
+    echo "soren challenge clicked"
     input tap 540 1800
     wait
 
@@ -908,9 +939,9 @@ function guildHunts() {
     # We check for the VS text at the top of the screen to see if Soren is active
     getColor 600 80
     # echo "Soren VS: " $RGB
-    if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; then
+    if [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ] || [ "$RGB" == "efde99" ]; then
       echo $LGREEN"Soren active, battling.."$NC
-      while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ]; do
+      while [ "$RGB" == "eedd9e" ] || [ "$RGB" == "efdd9e" ] || [ "$RGB" == "efde99" ]; do
         # Click Begin Battles
         input tap 550 1850
         #wait for battle to finish
@@ -1011,31 +1042,30 @@ function collectQuestChests() {
 
     # Collect Quests loop
     getColor 700 670
-    # echo "Quest Debug: " $RGB
     while [ "$RGB" == "7dfff1" ]; do
       # If blue 'completed' bar found, click collect
         echo $LGREEN"  Quest found, collecting.."$NC
         input tap 930 680
-        wait
+        sleep 0.5
         getColor 700 670
     done
 
     input tap 330 430
-    wait
+    sleep 0.5
     input tap 580 600
     input tap 500 430
-    wait
+    sleep 0.5
     input tap 580 600
     input tap 660 430
-    wait
+    sleep 0.5
     input tap 580 600
     input tap 830 430
-    wait
+    sleep 0.5
     input tap 580 600
     input tap 990 430
-    wait
+    sleep 0.5
     input tap 580 600
-    wait
+    sleep 0.5
     input tap 70 1650
     wait
 
@@ -1061,8 +1091,6 @@ switchTab "Ranhorn"
 switchTab "Dark Forest"
 switchTab "Campaign"
 
-# attemptCampaign "3"
-
 # Load first character
 switchCharacter "1"
 openMenu
@@ -1077,16 +1105,17 @@ attemptCampaign "2"
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
-collectBounties
+# collectBounties
 arenaOfHeroesQuick
 legendsTournament
-kingsTower
+openTower
+kingsTower "1"
 
 # RANHORN TAB
 switchTab "Ranhorn"
 guildHunts
 # twistedRealmBoss #12-40 required
-storeBuyDust # TODO Buy elite soulstone as well
+storeBuyDust
 
 # CAMPAIGN TAB
 switchTab "Campaign"
@@ -1100,23 +1129,24 @@ openMenu
 # CAMPAIGN TAB
 switchTab "Campaign"
 lootAfkChest
-fastRewards
 collectMail
 collectFriendsAndMercenaries
+fastRewards
 attemptCampaign "2"
 
 # DARK FOREST TAB
 switchTab "Dark Forest"
-# collectBounties
+collectBounties
 arenaOfHeroes
-# legendsTournament
-kingsTower
+legendsTournament
+openTower
+kingsTower "1"
 
 # RANHORN TAB
 switchTab "Ranhorn"
 guildHunts
 # twistedRealmBoss #12-40 required
-storeBuyDust # TODO Buy elite soulstone as well
+storeBuyDust
 
 # CAMPAIGN TAB
 switchTab "Campaign"
