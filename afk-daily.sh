@@ -7,6 +7,7 @@ RGBDEBUG=false
 LAUNCHTIMER=0
 BATTLETIMER=0
 COUNTER=0
+DAY=$(date +%u)
 ## Text Colours
 GREEN='\033[0;32m'
 LGREEN='\033[1;32m'
@@ -752,13 +753,94 @@ function legendsTournament() {
     echo
 }
 
+handleKingsTower() {
+  #open and run standard tower
+  openTower "0"
+  kingsTower "$1"
+  #handle faction towers based on day
+  case "$DAY" in
+  "1") #Monday
+  echo $LGREEN"Running Monday factional towers"$NC
+  openTower "1"
+  kingsTower "1"
+  ;;
+  "2") #Tuesday
+  echo $LGREEN"Running Tuesday factional towers"$NC
+  openTower "2"
+  kingsTower "1"
+  ;;
+  "3") #Wednesday
+  echo $LGREEN"Running Wednesday factional towers"$NC
+  openTower "3"
+  kingsTower "1"
+  ;;
+  "4") #Thursday
+  echo $LGREEN"Running Thursday factional towers"$NC
+  openTower "4"
+  kingsTower "1"
+  ;;
+  "5") #Friday
+  echo $LGREEN"Running Friday factional towers"$NC
+  openTower "1"
+  kingsTower "1"
+  openTower "2"
+  kingsTower "1"
+  ;;
+  "6") #Saturday
+  echo $LGREEN"Running Saturday factional towers"$NC
+  openTower "3"
+  kingsTower "1"
+  openTower "4"
+  kingsTower "1"
+  ;;
+  "7") #Sunday
+  echo $LGREEN"Running Sunday factional towers"$NC
+  openTower "1"
+  kingsTower "1"
+  openTower "2"
+  kingsTower "1"
+  openTower "3"
+  kingsTower "1"
+  openTower "4"
+  kingsTower "1"
+  ;;
+  *)
+  echo $RED"Invalid parameter for DAY variable."$NC
+  exit 1
+  ;;
+  esac
+}
+
 function openTower() {
-  #Click King's Tower
+  #Click King's Tower in main map
   input tap 500 870
   wait
-  #Click non-faction tower
+  case "$1" in
+  "0") #Non-faction tower
   input tap 550 900
   wait
+  ;;
+  "1") #LB tower
+  input tap 250 500
+  wait
+  ;;
+  "2") #Mauler tower
+  input tap 800 500
+  wait
+  ;;
+  "3") #Wilder tower
+  input tap 250 1400
+  wait
+  ;;
+  "4") #Graveborn tower
+  input tap 800 1400
+  wait
+  ;;
+  *)
+  echo $RED"Invalid parameter for openTower."$NC
+  exit 1
+  ;;
+  esac
 }
 
 # Battles once in the kings tower
@@ -817,8 +899,12 @@ function kingsTower() {
       done
       ;;
     *)
-      echo $RED"Invalid parameter for attemptCampaign."$NC
-      exit 1
+      echo $RED"Invalid parameter for kingsTower."$NC
+      #Click back arrow
+      input tap 70 1810
+      wait
+      input tap 70 1810
+      wait
       ;;
     esac
 }
