@@ -272,7 +272,7 @@ function waitForBattleToFinish() {
     while [ $BATTLETIMER -lt 90 ]; do
       getColor 160 1150
       # echo "Defeat Debug: " $RGB
-      if [ "$RGB" = "8495a6" ] || [ "$RGB" = "617a92" ] || [ "$RGB" = "8091a9" ]; then
+      if [ "$RGB" = "8393a6" ] || [ "$RGB" = "617a92" ] || [ "$RGB" = "8191aa" ]; then
         echo $ORANGE"  Defeat!"$NC
         return
       fi
@@ -321,7 +321,7 @@ function attemptCampaign() {
 
         # Check for 'boss' text in enemy formation
         getColor 550 740
-        if [ "$RGB" = "f1d79f" ]; then
+        if [ "$RGB" = "f2d79f" ]; then
             input tap 550 1450
         fi
 
@@ -351,7 +351,7 @@ function attemptCampaign() {
 
         # Check for 'boss' text in enemy formation
         getColor 550 740
-        if [ "$RGB" = "f1d79f" ]; then
+        if [ "$RGB" = "f2d79f" ]; then
             input tap 550 1450
         fi
 
@@ -392,7 +392,7 @@ function attemptCampaign() {
         while [ $victory = "false" ]; do
           getColor 160 1150
           # echo "Def " $RGB
-          if [ "$RGB" = "8495a6" ] || [ "$RGB" = "8091a9" ] || [ "$RGB" = "090a11" ]; then
+          if [ "$RGB" = "8393a6" ] || [ "$RGB" = "8191aa" ] || [ "$RGB" = "090a11" ]; then
             let "COUNTER=COUNTER+1"
             echo $RED"Defeat!"$NC "#"$COUNTER
             input tap 550 1500
@@ -424,7 +424,7 @@ function fastRewards() {
   echo $CYAN"Attempting daily fast reward collection."$NC
   getColor 980 1620
   # echo "fastReward collection debug: " $RGB
-  if [ "$RGB" == "ed1f06" ]; then
+  if [ "$RGB" == "f61b0b" ]; then
     # Click fast rewards
     input tap 950 1660
     wait
@@ -456,7 +456,7 @@ collectMail() {
     echo $CYAN"Attempting to collect mail."$NC
   getColor 1000 580
   # echo "collectMail collection debug: " $RGB
-  if [ "$RGB" == "ff301c" ]; then
+  if [ "$RGB" == "ff3120" ]; then
     # Click mail icon
     input tap 960 630
     wait
@@ -482,8 +482,8 @@ function collectFriendsAndMercenaries() {
   echo $CYAN"Attempting companion point collection and mercenary lending."$NC
   getColor 1000 760
   # echo "collectFriendsAndMercenaries collection debug: " $RGB
-  if [ "$RGB" == "f91c0b" ]; then
-    # Clic friends
+  if [ "$RGB" == "fa1d0c" ]; then
+    # Click friends
     input tap 970 810
     wait
     # Click send and recieve
@@ -798,7 +798,7 @@ function kingsTower() {
 
       while [ $victory = "false" ]; do
         getColor 160 1150
-        if [ "$RGB" = "8495a6" ] || [ "$RGB" = "8091a9" ] || [ "$RGB" = "090a11" ]; then
+        if [ "$RGB" = "8495a6" ] || [ "$RGB" = "8191aa" ] || [ "$RGB" = "090a11" ]; then
           let "COUNTER=COUNTER+1"
           echo $RED"Defeat!"$NC "#"$COUNTER
           input tap 550 1500
@@ -840,8 +840,8 @@ function guildHunts() {
 
     # Check for quick battles first, else check standard Wrizz battle
     getColor 710 1820
-    if [ "$RGB" == "97eac2" ]; then
-      while [ "$RGB" == "97eac2" ]; do
+    if [ "$RGB" == "96e9c8" ]; then
+      while [ "$RGB" == "96e9c8" ]; do
         echo $LGREEN"  Wrizz quick battle active, battling.."$NC
         # Click Quick Battle
         input tap 710 1820
@@ -894,8 +894,8 @@ function guildHunts() {
     # Check for quick battles first, else check standard Soren battle
     getColor 710 1820
     # echo "Soren quick RGB: " $RGB
-    if [ "$RGB" == "97eac2" ]; then
-      while [ "$RGB" == "97eac2" ]; do
+    if [ "$RGB" == "98ecc5" ]; then
+      while [ "$RGB" == "98ecc5" ]; do
         echo $LGREEN"  Soren quick battle active, battling.."$NC
         # Click Quick Battle
         input tap 710 1820
@@ -1039,7 +1039,6 @@ function collectQuestChests() {
     # Click Dailies
     input tap 400 1650
     wait
-
     # Collect Quests loop
     getColor 700 670
     while [ "$RGB" == "7dfff1" ]; do
