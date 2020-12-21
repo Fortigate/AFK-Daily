@@ -1096,21 +1096,29 @@ function storeBuyDust() {
     #Click on the shop
     input tap 330 1650
     wait
-    # Check for purple dust pixel
-    getColor 175 840
-    if [ "$RGB" == "bb81dd" ] || [ "$RGB" == "bb87dd" ] || [ "$RGB" == "bb7edd" ]  ||  [ "$RGB" == "bb7dde" ]  ||  [ "$RGB" == "bb80de" ]  ||  [ "$RGB" == "bb88de" ]; then
-      input tap 170 840
-      wait
-      #Click Purchase (Two clicks as it can appear in two locations)
-      input tap 550 1420
-      input tap 550 1550
-      wait
-      #Close loot window
-      input tap 550 1220
-      wait
-    else
-      echo "  Dust colour found: " $RGB
-    fi
+
+    # Buy dust
+    input tap 170 840
+    wait
+    #Click Purchase (Two clicks as it can appear in two locations)
+    input tap 550 1420
+    input tap 550 1550
+    wait
+    #Close loot window
+    input tap 550 1220
+    wait
+
+    # Buy PoE Coins
+    input tap 650 1425
+    wait
+    #Click Purchase (Two clicks as it can appear in two locations)
+    input tap 550 1420
+    input tap 550 1550
+    wait
+    #Close loot window
+    input tap 550 1220
+    wait
+
     #Back arrow to exit 1 shop
     input tap 70 1810
 
