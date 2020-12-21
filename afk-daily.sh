@@ -4,10 +4,12 @@
 # CONFIG: Modify accordingly to your game!
 victory=false
 RGBDEBUG=false
+DAILIESDONE=false
 LAUNCHTIMER=0
 BATTLETIMER=0
 COUNTER=0
 DAY=$(date +%u)
+DAYOFMONTH=$(date +%d)
 ## Text Colours
 GREEN='\033[0;32m'
 LGREEN='\033[1;32m'
@@ -167,6 +169,7 @@ function switchCharacter() {
           wait
         fi
         verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
+        DAILIESDONE=false
         echo
         ;;
     "2")
@@ -198,6 +201,7 @@ function switchCharacter() {
           wait
         fi
         verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
+        DAILIESDONE=false
         echo
         ;;
     "3")
@@ -229,6 +233,7 @@ function switchCharacter() {
           wait
         fi
         verifyRGB 1050 1800 482f16 $GREEN"Character checked."$NC
+        DAILIESDONE=false
         echo
         ;;
     *)
@@ -1115,6 +1120,36 @@ function storeBuyDust() {
 }
 
 # Collects
+function checkDailyQuestStatus() {
+    #TODO: Check weekly/campaign
+    echo $CYAN"Checking status of daily quests."$NC
+    # Click quests
+    input tap 960 250
+    wait
+    # Click Dailies
+    input tap 400 1650
+    wait
+
+    # Collect Quests loop
+    getColor 1000 390
+    if [ "$RGB" == "4c3323" ]; then
+      echo $ORANGE"  Dailies already completed"$NC
+      DAILIESDONE=true
+    else
+      echo $ORANGE"  Dailies still need to be run"$NC
+      DAILIESDONE=false
+    fi
+    wait
+
+    # Close quests window
+    input tap 70 1650
+    wait
+
+    verifyRGB 1050 1800 482f16 $GREEN"Daily quest status checked."$NC
+    echo
+}
+
+# Collects
 function collectQuestChests() {
     #TODO: Check weekly/campaign
     echo $CYAN"Attempting to collect daily quest chests."$NC
@@ -1158,88 +1193,173 @@ function collectQuestChests() {
     echo
 }
 
+function collectDailyDeals() {
+  echo $CYAN"Attempting to collect daily deals."$NC
+  # Open merchant screen
+  input tap 120 300
+  wait
+
+  # Swipe right to we are sure of the position of the icon bar
+  input swipe 250 1825 1000 1825 500
+  wait
+
+  # If "1" we assume "Visiting Merchants" occupies the left-most slot, so need to click one icon to the right
+  if [ $1 == "1" ]; then
+    input tap 780 1825
+  else
+    input tap 580 1825
+  fi
+
+  # Select Daily, and collect rewards
+  input tap 100 1625
+  wait
+  # Second variable is if you have bundles unlocked, which moves the rewards down. "1" is no bundles unlocked.
+  if [ $2 == "1" ]; then
+    input tap 220 750
+  else
+    input tap 200 1400
+  fi
+  wait
+
+  # If it's Sunday we collect weekly rewards
+  if [ $DAY == "7" ]; then
+    input tap 275 1625
+    wait
+    if [ $2 == "1" ]; then
+      input tap 220 750
+    else
+      input tap 200 1400
+    fi
+    wait
+  fi
+
+  # If it's the 1st of the month we collect monthly rewards
+  if [ $DAYOFMONTH == "01" ]; then
+    input tap 450 1625
+    wait
+    if [ $2 == "1" ]; then
+      input tap 220 750
+    else
+      input tap 200 1400
+    fi
+    wait
+  fi
+
+input tap 70 1810
+wait
+
+verifyRGB 1050 1800 482f16 $GREEN"Daily Deals checked."$NC
+
+}
+
 # --- Script Start --- #
 echo
 echo $GREEN"Script started, waiting for game to load.."$NC
+sleep 1
 closeApp
-sleep 0.5
+sleep 1
 startApp
 sleep 10
 
 # #Wait until game is active
 waitUntilGameActive
 
-echo $GREEN"Game loaded! starting activities.."$NC
+echo $GREEN"Game loaded! starting activities.."$NC $(date +%H:%M)
 echo
 
-switchTab "Ranhorn"
-switchTab "Dark Forest"
-switchTab "Campaign"
+#switchTab "Dark Forest"
+# while [ "1" -lt "2" ]; do
+#   handleKingsTower "1"
+# done"
+
+collectDailyDeals "0" "0"
 
 # Load first character
 switchCharacter "1"
 openMenu
+checkDailyQuestStatus
 
-# CAMPAIGN TAB
-switchTab "Campaign"
-lootAfkChest
-collectMail
-collectFriendsAndMercenaries
-fastRewards
-attemptCampaign "2"
-
-# DARK FOREST TAB
-switchTab "Dark Forest"
-# collectBounties
-arenaOfHeroesQuick
-legendsTournament
-openTower
-kingsTower "1"
-
-# RANHORN TAB
-switchTab "Ranhorn"
-guildHunts
-# twistedRealmBoss #12-40 required
-storeBuyDust
-
-# CAMPAIGN TAB
-switchTab "Campaign"
-lootAfkChest
-collectQuestChests
+if [ $DAILIESDONE == false ]; then
+  ## CAMPAIGN TAB ##
+  switchTab "Campaign"
+  collectDailyDeals "0" "0"
+  lootAfkChest
+  collectMail
+  fastRewards
+  collectFriendsAndMercenaries
+  attemptCampaign "1"
+  ## DARK FOREST TAB ##
+  switchTab "Dark Forest"
+  # collectBounties
+  arenaOfHeroesQuick
+  # legendsTournament
+  handleKingsTower "1"
+  ## RANHORN TAB ##
+  switchTab "Ranhorn"
+  guildHunts
+  ## CAMPAIGN TAB ##
+  switchTab "Campaign"
+  lootAfkChest
+  collectQuestChests
+else
+  ## CAMPAIGN TAB ##
+  switchTab "Campaign"
+  collectDailyDeals "0"
+  collectMail
+  collectFriendsAndMercenaries
+  ## DARK FOREST TAB ##
+  switchTab "Dark Forest"
+  arenaOfHeroesQuick
+  ## RANHORN TAB ##
+  switchTab "Ranhorn"
+  guildHunts
+fi
 
 # Load second character
 switchCharacter "2"
 openMenu
+checkDailyQuestStatus
 
-# CAMPAIGN TAB
-switchTab "Campaign"
-lootAfkChest
-collectMail
-collectFriendsAndMercenaries
-fastRewards
-attemptCampaign "2"
-
-# DARK FOREST TAB
-switchTab "Dark Forest"
-collectBounties
-arenaOfHeroes
-legendsTournament
-openTower
-kingsTower "1"
-
-# RANHORN TAB
-switchTab "Ranhorn"
-guildHunts
-# twistedRealmBoss #12-40 required
-storeBuyDust
-
-# CAMPAIGN TAB
-switchTab "Campaign"
-lootAfkChest
-collectQuestChests
+if [ $DAILIESDONE == false ]; then
+  ## CAMPAIGN TAB ##
+  switchTab "Campaign"
+  collectDailyDeals "1" "1"
+  lootAfkChest
+  collectMail
+  collectFriendsAndMercenaries
+  fastRewards
+  attemptCampaign "2"
+  ## DARK FOREST TAB ##
+  switchTab "Dark Forest"
+  collectBounties
+  arenaOfHeroesQuick
+  legendsTournament
+  handleKingsTower "1"
+  ## RANHORN TAB ##
+  switchTab "Ranhorn"
+  guildHunts
+  storeBuyDust
+  # CAMPAIGN TAB
+  switchTab "Campaign"
+  lootAfkChest
+  collectQuestChests
+else
+  ## CAMPAIGN TAB ##
+  switchTab "Campaign"
+  lootAfkChest
+  collectMail
+  collectFriendsAndMercenaries
+  ## DARK FOREST TAB ##
+  switchTab "Dark Forest"
+  collectBounties
+  ## RANHORN TAB ##
+  switchTab "Ranhorn"
+  guildHunts
+  storeBuyDust
+fi
 
 switchCharacter "1"
 
-echo $GREEN"End of script!"$NC
+echo $GREEN"End of script!"$NC $(date +%H:%M)
 closeApp
 exit 0
