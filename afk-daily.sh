@@ -48,7 +48,7 @@ function test() {
 
 # Default wait time for actions
 function wait() {
-    sleep 1
+    sleep 4
 }
 
 # Starts the app
@@ -532,27 +532,27 @@ function collectBounties() {
     #Select Solo bounties
     input tap 650 1700
     wait
+    #Select Collect All
+    input tap 850 1550
+    wait
     #Select Dispatch
     input tap 350 1550
     wait
     #Select Confirm
     input tap 550 1540
-    wait
-    #Select Collect All
-    input tap 850 1550
     wait
 
     #Select Team bounties
     input tap 950 1700
     wait
+    #Select Collect All
+    input tap 850 1550
+    wait
     #Select Dispatch
     input tap 350 1550
     wait
     #Select Confirm
     input tap 550 1540
-    wait
-    #Select Collect All
-    input tap 850 1550
     wait
 
     #Tap back
@@ -730,7 +730,7 @@ function legendsTournament() {
         #Make sure we're loaded then skip
         sleep 2
         input tap 800 1450
-        input tap 870 1450
+        # input tap 870 1450
         wait
 
         #Tap to close Victory/Defeat screen
@@ -1005,7 +1005,6 @@ function guildHunts() {
     fi
 
     # Click Challenge
-    echo "soren challenge clicked"
     input tap 540 1800
     wait
 
