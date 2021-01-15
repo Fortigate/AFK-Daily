@@ -2,13 +2,15 @@
 
 # --- Variables --- #
 # CONFIG: Modify accordingly to your game!
+HoE=true # For Halls of Esperia PvP event moving the PvP activity buttons
+RGBDEBUG=true # For debugging RGB values
+# Script variables, do not edit
 victory=false
-RGBDEBUG=false
 DAILIESDONE=false
 LAUNCHTIMER=0
 BATTLETIMER=0
 COUNTER=0
-DAY=$(date +%u)
+DAYOFWEEK=$(date +%u)
 DAYOFMONTH=$(date +%d)
 ## Text Colours
 GREEN='\033[0;32m'
@@ -48,7 +50,7 @@ function test() {
 
 # Default wait time for actions
 function wait() {
-    sleep 4
+    sleep 3
 }
 
 # Starts the app
@@ -576,8 +578,12 @@ function arenaOfHeroes() {
     #Click "Arena of Heroes"
     input tap 740 1050
     wait
-    #Click first card in list
-    input tap 550 450
+    #Click Arena card in list
+    if [ $HoE == false ]; then
+      input tap 550 450
+    else
+      input tap 550 900
+    fi
     wait
     #Click Record and close to clear the notification
     input tap 1000 1800
@@ -634,9 +640,12 @@ function arenaOfHeroesQuick() {
     #Click "Arena of Heroes"
     input tap 740 1050
     wait
-    #Click first card in list
-    input tap 550 450
-    wait
+    #Click Arena card in list
+    if [ $HoE == false ]; then
+      input tap 550 450
+    else
+      input tap 550 900
+    fi
     #Click Record and close to clear the notification
     input tap 1000 1800
     wait
@@ -670,13 +679,14 @@ function arenaOfHeroesQuick() {
         sleep 4
         #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 813 691
+        wait
       done
     else
       echo $ORANGE"  No free arena battles found"$NC
     fi
 
     #Close opponent list window
-    input tap 1000 380
+    input tap 70 1810
     wait
     #Tap back
     input tap 70 1810
@@ -695,13 +705,13 @@ function legendsTournament() {
     # Click Arena of Heroes
     input tap 740 1050
     wait
-
-    #Second slot
-    input tap 550 900
-    # #Third Slot
-    # input tap 550 1450
+    #Click Legends card in list
+    if [ $HoE == false ]; then
+      input tap 550 900
+    else
+      input tap 550 1450
+    fi
     wait
-
     #Collect Gladiator Coins
     input tap 550 280
     wait
@@ -734,21 +744,21 @@ function legendsTournament() {
         wait
         #Click Begin Battle
         input tap 550 1850
+        sleep 4
         #Make sure we're loaded then skip
-        sleep 2
         input tap 800 1450
-        # input tap 870 1450
         wait
-
         #Tap to close Victory/Defeat screen
         input tap 550 1850
-        wait
+        sleep 4
         # Click Challenge
         input tap 550 1840
         wait
         #We need to be back at the challenge menu again before we check the 'Free' text
         getColor 790 728
+        wait
       done
+      echo $ORANGE"  No more free legends battles found"$NC
     else
       echo $ORANGE"  No free legends battles found"$NC
     fi
@@ -853,7 +863,7 @@ handleKingsTower() {
   openTower "0"
   kingsTower "$1"
   #handle faction towers based on day
-  case "$DAY" in
+  case "$DAYOFWEEK" in
   "1") #Monday
   echo $LGREEN"Running Monday factional towers"$NC
   openTower "1"
@@ -900,7 +910,7 @@ handleKingsTower() {
   kingsTower "1"
   ;;
   *)
-  echo $RED"Invalid parameter for DAY variable."$NC
+  echo $RED"Invalid parameter for DAYOFWEEK variable."$NC
   exit 1
   ;;
   esac
@@ -1290,6 +1300,9 @@ function collectQuestChests() {
     echo
 }
 
+# Collect daily deals
+# Param 1: If "Visiting Merchants" occupies the leftmost slot under the Merchant screencap "1", else "0"
+# Param 2: if you have bundles unlocked, which pushes the collection button down "1", else "0"
 function collectDailyDeals() {
   echo $CYAN"Attempting to collect daily deals."$NC
   # Open merchant screen
@@ -1300,45 +1313,53 @@ function collectDailyDeals() {
   input swipe 250 1825 1000 1825 500
   wait
 
-  # If "1" we assume "Visiting Merchants" occupies the left-most slot, so need to click one icon to the right
   if [ $1 == "1" ]; then
     input tap 780 1825
   else
     input tap 580 1825
   fi
+  wait
 
   # Select Daily, and collect rewards
+  echo $LGREEN"  Collecting free Daily Deal.."$NC
   input tap 100 1625
   wait
-  # Second variable is if you have bundles unlocked, which moves the rewards down. "1" is no bundles unlocked.
-  if [ $2 == "1" ]; then
+  if [ $2 == "0" ]; then
     input tap 220 750
   else
     input tap 200 1400
   fi
   wait
+  input tap 100 1625 # clear rewards
+  wait
 
   # If it's Sunday we collect weekly rewards
-  if [ $DAY == "7" ]; then
+  if [ $DAYOFWEEK == "7" ]; then
+    echo $LGREEN"  Collecting free Weekly Deal.."$NC
     input tap 275 1625
     wait
-    if [ $2 == "1" ]; then
+    if [ $2 == "0" ]; then
       input tap 220 750
     else
       input tap 200 1400
     fi
+    wait
+    input tap 275 1625 # clear rewards
     wait
   fi
 
   # If it's the 1st of the month we collect monthly rewards
   if [ $DAYOFMONTH == "01" ]; then
+    echo $LGREEN"  Collecting free Monthly Deal.."$NC
     input tap 450 1625
     wait
-    if [ $2 == "1" ]; then
+    if [ $2 == "0" ]; then
       input tap 220 750
     else
       input tap 200 1400
     fi
+    wait
+    input tap 450 1625 # clear rewards
     wait
   fi
 
@@ -1346,6 +1367,7 @@ input tap 70 1810
 wait
 
 verifyRGB 1050 1800 482f16 $GREEN"Daily Deals checked."$NC
+echo ""
 
 }
 
@@ -1421,7 +1443,8 @@ checkDailyQuestStatus
 if [ $DAILIESDONE == false ]; then
   ## CAMPAIGN TAB ##
   switchTab "Campaign"
-  collectDailyDeals "0" "0"
+  collectDailyDeals "1" "1"
+  collectMonthlyCard "2"
   lootAfkChest
   collectMail
   fastRewards
@@ -1432,11 +1455,12 @@ if [ $DAILIESDONE == false ]; then
   # collectBounties
   HeroesOfEsperia
   arenaOfHeroesQuick
-  # legendsTournament
+  legendsTournament
   handleKingsTower "1"
   ## RANHORN TAB ##
   switchTab "Ranhorn"
   guildHunts
+  storeBuyDust
   ## CAMPAIGN TAB ##
   switchTab "Campaign"
   lootAfkChest
@@ -1444,12 +1468,10 @@ if [ $DAILIESDONE == false ]; then
 else
   ## CAMPAIGN TAB ##
   switchTab "Campaign"
-  collectDailyDeals "0"
-  collectMail
   collectFriendsAndMercenaries
   ## DARK FOREST TAB ##
   switchTab "Dark Forest"
-  arenaOfHeroesQuick
+  legendsTournament
   ## RANHORN TAB ##
   switchTab "Ranhorn"
   guildHunts
@@ -1463,7 +1485,7 @@ checkDailyQuestStatus
 if [ $DAILIESDONE == false ]; then
   ## CAMPAIGN TAB ##
   switchTab "Campaign"
-  collectDailyDeals "1" "1"
+  collectDailyDeals "1" "0"
   lootAfkChest
   collectMail
   collectFriendsAndMercenaries
@@ -1483,12 +1505,12 @@ if [ $DAILIESDONE == false ]; then
   # CAMPAIGN TAB
   switchTab "Campaign"
   lootAfkChest
+  attemptCampaign "2"
   collectQuestChests
 else
   ## CAMPAIGN TAB ##
   switchTab "Campaign"
   lootAfkChest
-  collectMail
   collectFriendsAndMercenaries
   ## DARK FOREST TAB ##
   switchTab "Dark Forest"
@@ -1496,7 +1518,6 @@ else
   ## RANHORN TAB ##
   switchTab "Ranhorn"
   guildHunts
-  storeBuyDust
 fi
 
 switchCharacter "1"
