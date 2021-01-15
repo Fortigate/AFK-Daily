@@ -758,6 +758,89 @@ function legendsTournament() {
     echo
 }
 
+function HeroesOfEsperia() {
+  echo $CYAN"Attempting Heroes of Esperia battles."$NC
+  #Click "Arena of Heroes"
+  input tap 740 1050
+  wait
+  #Click HoE card in list
+  input tap 550 450
+  wait
+  #Click Record and close to clear the notification
+  input tap 1000 1800
+  wait
+  input tap 1000 1800
+  wait
+  #Click Challenge
+  input tap 600 1100
+  wait
+
+  #Click Ticket Purchase
+  input tap 400 540
+  wait
+  # We try and detect the 'Free' text on the bottom opponent
+  getColor 740 1195
+  wait
+  if [ "$RGB" = "ffffff" ]; then # If it's found..
+    echo $LGREEN"  10 Gem ticket purchase found"$NC
+    # Buy the tickets
+    input tap 740 1200
+    wait
+  else
+    echo $ORANGE"  No 10 Gem tickets found"$NC
+    #Click Cancel
+    input tap 360 1200
+    wait
+  fi
+
+  # We try and detect the 'Free' text on the bottom opponent
+  getColor 788 695
+  if [ "$RGB" = "fdf7eb" ]; then # If it's found..
+    wait
+    while [ "$RGB" = "fdf7eb" ]; do # Loop battles until we don't detect the 'Free' text
+      echo $LGREEN"  Free HoE battle found"$NC
+      #Select second lowest slot
+      input tap 820 1180
+      sleep 5
+      #Click 'Begin Battle'
+      input tap 550 1850
+      # Long sleep because things get slow while loading
+      sleep 5
+      #Click skip
+      input tap 740 1450
+      wait
+      #Tap to clear loot
+      input tap 560 430
+      wait
+      #Tap to close Victory/Defeat screen
+      input tap 560 430
+      wait
+      #Click Challenge
+      input tap 600 1100
+      sleep 10 # Long sleep incase we go up a tier, which has a long animation
+      #We need to be back at the challenge menu again before we check the 'Free' text
+      getColor 788 695
+      wait
+    done
+    echo $ORANGE"  No more battles found"$NC
+  else
+    echo $ORANGE"  No HoE battles found"$NC
+  fi
+
+  #Close opponent list window
+  input tap 70 1810
+  wait
+  #Tap back
+  input tap 70 1810
+  wait
+  #Tap back
+  input tap 70 1810
+
+  wait
+  verifyRGB 1050 1800 482f16 $GREEN"Arena of Heroes successfully checked."$NC
+  echo
+}
+
 handleKingsTower() {
   #open and run standard tower
   openTower "0"
@@ -1298,6 +1381,7 @@ if [ $DAILIESDONE == false ]; then
   ## DARK FOREST TAB ##
   switchTab "Dark Forest"
   # collectBounties
+  HeroesOfEsperia
   arenaOfHeroesQuick
   # legendsTournament
   handleKingsTower "1"
@@ -1339,6 +1423,7 @@ if [ $DAILIESDONE == false ]; then
   ## DARK FOREST TAB ##
   switchTab "Dark Forest"
   collectBounties
+  HeroesOfEsperia
   arenaOfHeroesQuick
   legendsTournament
   handleKingsTower "1"
