@@ -437,7 +437,7 @@ function fastRewards() {
   echo $CYAN"Attempting daily fast reward collection."$NC
   getColor 980 1620
   # echo "fastReward collection debug: " $RGB
-  if [ "$RGB" == "f61b0b" ]; then
+  if [ "$RGB" == "ef1e05" ]; then
     # Click fast rewards
     input tap 950 1660
     wait
@@ -469,7 +469,7 @@ collectMail() {
     echo $CYAN"Attempting to collect mail."$NC
   getColor 1000 580
   # echo "collectMail collection debug: " $RGB
-  if [ "$RGB" == "ff3120" ]; then
+  if [ "$RGB" == "ff3017" ]; then
     # Click mail icon
     input tap 960 630
     wait
@@ -495,7 +495,7 @@ function collectFriendsAndMercenaries() {
   echo $CYAN"Attempting companion point collection and mercenary lending."$NC
   getColor 1000 760
   # echo "collectFriendsAndMercenaries collection debug: " $RGB
-  if [ "$RGB" == "fa1d0c" ]; then
+  if [ "$RGB" == "f9200d" ]; then
     # Click friends
     input tap 970 810
     wait
@@ -1021,8 +1021,8 @@ function guildHunts() {
 
     # Check for quick battles first, else check standard Wrizz battle
     getColor 710 1820
-    if [ "$RGB" == "96e9c8" ]; then
-      while [ "$RGB" == "96e9c8" ]; do
+    if [ "$RGB" == "97eac2" ]; then
+      while [ "$RGB" == "97eac2" ]; do
         echo $LGREEN"  Wrizz quick battle active, battling.."$NC
         # Click Quick Battle
         input tap 710 1820
