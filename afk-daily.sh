@@ -1349,6 +1349,48 @@ verifyRGB 1050 1800 482f16 $GREEN"Daily Deals checked."$NC
 
 }
 
+# Collect Monthly card
+# Param 1: "1" to collect only Monthly Card, "2" to collect only Deluxe Monthly Card, "3" to collect both
+function collectMonthlyCard() {
+  echo $CYAN"Attempting to collect Monthly Cards."$NC
+  # Open merchant screen
+  input tap 120 300
+  wait
+
+  # Swipe left so we are sure of the position of the icon bar
+  input swipe 1000 1825 250 1825 500
+  wait
+
+  # Click on Monthly Card
+  input tap 275 1800
+  wait
+
+  if [ $1 == "1" ] || [ $1 == "3" ]; then
+    # Select Daily, and collect rewards
+    echo $LGREEN"  Collecting Monthly Card.."$NC
+    input tap 300 1000
+    wait
+    input tap 275 1800 # clear rewards
+    wait
+  fi
+
+  if [ $1 == "2" ] || [ $1 == "3" ]; then
+    # Select Daily, and collect rewards
+    echo $LGREEN"  Collecting Deluxe Monthly Card.."$NC
+    input tap 850 1000
+    wait
+    input tap 275 1800 # clear rewards
+    wait
+  fi
+
+input tap 70 1810
+wait
+
+verifyRGB 1050 1800 482f16 $GREEN"Monthly Cards checked."$NC
+echo ""
+
+}
+
 # --- Script Start --- #
 echo
 echo $GREEN"Script started, waiting for game to load.."$NC
