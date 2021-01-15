@@ -341,6 +341,13 @@ function attemptCampaign() {
         wait
         # Click exit battle
         input tap 230 960
+        wait
+
+        getColor 600 80
+        if [ "$RGB" == "f2d997" ]; then
+          # Multifights return to the formation screen, so click back again if we see the VS text at the top
+          input tap 70 1810
+        fi
 
         # VerifyRGB with the top left of the chat button
         wait
